@@ -172,6 +172,14 @@ function initializeDropdown(lines, stops) {
       return;
     }
     alert(`You selected: Line ${lineSelect.value} → ${stationName} (${direction})`);
+
+    var dataToBeSent = {
+      'station': `${stationName}${direction}`
+    }
+
+    alert(`Sending ${dataToBeSent['station']}`);
+
+
   });
 
   function renderStationOptions(filter = "") {
