@@ -171,11 +171,13 @@ function initializeDropdown(lines, stops) {
       alert("Please select a direction.");
       return;
     }
-    alert(`You selected: Line ${lineSelect.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
 
     var dataToBeSent = {
       'station': `${stationId}${direction}`
     }
+    
+    alert(`You selected: Line ${lineSelect.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
+
 
     // Determine the correct return URL (emulator vs real watch)
     function getQueryParam(variable, defaultValue) {
