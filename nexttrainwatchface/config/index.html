@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Line & Stop Selector</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    select, input { margin: 10px 0; width: 300px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h2>Select Line & Station</h2>
+
+  <label>Line:
+    <select id="lineSelect">
+      <option value="">Select a line</option>
+    </select>
+  </label>
+  <br>
+  <input type="text" id="search" placeholder="Search stations..." class="hidden" />
+  <br>
+  <select id="stationSelect" size="6" class="hidden"></select>
+  <br>
+
+  <div id="directionContainer" class="hidden">
+    <label>Direction:
+      <select id="directionSelect">
+        <option value="">Select direction</option>
+        <option value="N">North (N)</option>
+        <option value="S">South (S)</option>
+      </select>
+    </label>
+  </div>
+  <br>
+
+  <button id="submitBtn" disabled>Submit</button>
+
+ <script>
+async function fetchCSV(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  
+  return text.split("\n").slice(1).map(row => {
+    const values = row.split(",");
+    return values;
+  });
+}
+
+async function loadData() {
+  const rawLines = await fetchCSV("lines.csv");
+  const rawStops = await fetchCSV("stations.csv");
+
+  // Convert CSV to objects
+  const lines = rawLines.map(row => ({
+    id: row[1],  // route_id
+    name: row[3], // route_long_name
+    direction_N: row[5], // route_direction_N (start station)
+    direction_S: row[6], // route_direction_S (end station)
+  }));
+
+  const stops = rawStops.map(row => ({
+    id: row[0],  // stop_id
+    name: row[5], // stop_name
+    lines: row[8] ? row[8].split(" ").map(line => ({ id: line })) : [], // Safety check
+    direction_N: row[12],
+    direction_S: row[13]
+  }));
+
+
+  initializeDropdown(lines, stops);
+}
+
+function initializeDropdown(lines, stops) {
+  const lineSelect = document.getElementById("lineSelect");
+  const searchInput = document.getElementById("search");
+  const stationSelect = document.getElementById("stationSelect");
+  const directionContainer = document.getElementById("directionContainer");
+  const directionSelect = document.getElementById("directionSelect");
+  const submitBtn = document.getElementById("submitBtn");
+
+  let filteredStops = [];
+
+  // --- Populate Line Dropdown ---
+  lines.forEach(line => {
+    const option = document.createElement("option");
+    option.value = line.id;
+    option.textContent = `${line.id} - ${line.name}`;
+    lineSelect.appendChild(option);
+  });
+
+  lineSelect.addEventListener("change", () => {
+    const selectedLine = lines.find(line => line.id === lineSelect.value);
+    
+    if (selectedLine) {
+      // Filter stops within the line's route (start and end station included)
+      const startStop = selectedLine.direction_N;
+      const endStop = selectedLine.direction_S;
+
+      const lineID = selectedLine.id
+
+      filteredStops = stops.filter(stop => 
+        stop.lines.some(line => line.id === lineID)
+      );
+
+      renderStationOptions();
+      searchInput.classList.remove("hidden");
+      stationSelect.classList.remove("hidden");
+      directionContainer.classList.remove("hidden");
+      searchInput.value = "";
+
+      // Populate directions based on the selected line
+      // directionSelect.innerHTML = "";
+      
+      // const optionN = document.createElement("option");
+      // optionN.value = "N";
+      // optionN.textContent = selectedLine.direction_N;
+      // const optionS = document.createElement("option");
+      // optionS.value = "S";
+      // optionS.textContent = selectedLine.direction_S;
+      // directionSelect.appendChild(optionN);
+      // directionSelect.appendChild(optionS);
+
+      submitBtn.disabled = true;
+       
+    } else {
+      searchInput.classList.add("hidden");
+      stationSelect.classList.add("hidden");
+      directionContainer.classList.add("hidden");
+      submitBtn.disabled = true;
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    renderStationOptions(searchInput.value);
+  });
+
+  stationSelect.addEventListener("change", () => {
+    if (stationSelect.value) {
+      const selectedLine = lines.find(line => line.id === lineSelect.value);
+      const selectedStop = stops.find(stop => stop.id === stationSelect.value);
+
+      directionSelect.innerHTML = "";
+      if (selectedStop.direction_N != "") {
+        const optionN = document.createElement("option");
+        optionN.value = "N";
+        optionN.textContent = selectedStop.direction_N;
+        directionSelect.appendChild(optionN);
+      }
+      if (selectedStop.direction_S != "") {
+        const optionS = document.createElement("option");
+        optionS.value = "S";
+        optionS.textContent = selectedStop.direction_S;
+        directionSelect.appendChild(optionS);
+      }
+
+      submitBtn.disabled = false;
+    } else {
+
+      submitBtn.disabled = true;
+    }
+  });
+
+  submitBtn.addEventListener("click", () => {
+    const stationId = stationSelect.value;
+    const stationName = filteredStops.find(s => s.id === stationId).name;
+    const direction = directionSelect.value;
+    
+    if (!direction) {
+      alert("Please select a direction.");
+      return;
+    }
+    alert(`You selected: Line ${lineSelect.value} → ${stationName} (${direction})`);
+  });
+
+  function renderStationOptions(filter = "") {
+    stationSelect.innerHTML = "";
+    filteredStops
+      .filter(s => s.name.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(s => {
+        const option = document.createElement("option");
+        option.value = s.id;
+        option.textContent = s.name;
+        stationSelect.appendChild(option);
+      });
+  }
+}
+
+// Load data on page load
+loadData();
+</script>
+
+
+</body>
+</html>
