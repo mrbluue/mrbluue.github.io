@@ -7,7 +7,7 @@
 
     @font-face {
         font-family: PFDinDisplayPro-Regular;
-        src: url("/resources/PFDinDisplayPro-Regular.ttf");
+        src: url("resources/PFDinDisplayPro-Regular.ttf");
     }
 
     @keyframes lineSeparatorAppears {
@@ -20,7 +20,7 @@
     }
 
     body { 
-      font-family: PFDinDisplayPro-Regular;
+      font-family: PFDinDisplayPro-Regular, sans-serif;
       color: white;
       background-color: #333;
       /* font-family: sans-serif;  */
@@ -280,7 +280,7 @@ function initializeDropdown(lines, stops) {
           const circle = document.createElement("span");
           circle.classList.add("circle");
           const icon = document.createElement("img");
-          icon.src = "/lineIcons/"+line.id+".svg";
+          icon.src = "lineIcons/"+line.id+".svg";
 
           lineSelectContainer.appendChild(checkbox);
           lineSelectContainer.appendChild(label);
