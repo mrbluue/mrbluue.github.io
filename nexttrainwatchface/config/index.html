@@ -2,36 +2,166 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Line & Stop Selector</title>
+  <title>Line & Stop Selector</title>  
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+
+    @font-face {
+        font-family: PFDinDisplayPro-Regular;
+        src: url("/resources/PFDinDisplayPro-Regular.ttf");
+    }
+
+    @keyframes lineSeparatorAppears {
+      0% {
+        background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 100%, rgba(255, 85, 85, 1) 100%, rgba(255, 85, 85, 1) 100%, rgba(255, 170, 170, 1) 100%, rgba(255, 170, 170, 1) 100%);
+      }
+      100%{
+        background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 85, 85, 1) 50%, rgba(255, 85, 85, 1) 75%, rgba(255, 170, 170, 1) 75%, rgba(255, 170, 170, 1) 100%);
+      }
+    }
+
+    body { 
+      font-family: PFDinDisplayPro-Regular;
+      color: white;
+      background-color: #333;
+      /* font-family: sans-serif;  */
+      padding: 20px; 
+
+    }
+    h1 {
+      margin: 0;
+      margin-bottom: 0.5rem; 
+    }
+    .section {
+      background-color: #484848;
+      padding: 1em;
+    }
+    h3 { 
+      margin: 0;
+      margin-bottom: 0.5em; 
+      background-color: #414141;
+    }
+    .lineSeparator{
+      height: 1em;
+      width: 100%;
+      margin-bottom: 1em;
+      /* animation: 1s ease-in 0s 1 forwards running lineSeparatorAppears; */
+      background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 85, 85, 1) 50%, rgba(255, 85, 85, 1) 75%, rgba(255, 170, 170, 1) 75%, rgba(255, 170, 170, 1) 100%);
+    }
     select, input { margin: 10px 0; width: 300px; }
+    input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none; 
+      width: auto !important;
+    }
+    #search{
+      box-sizing: border-box;
+    }
+    #stationSelect {
+      padding: 1px 2px;
+    }
+    #lineSelectContainer {
+      display: flex;
+      height: 35px;
+      /* overflow: hidden; */
+    }
+    #lineSelectContainer label { 
+      display: block;
+      width: 35px;
+      height: 35px;
+      margin-right: 10px;
+      transition: transform 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label {
+      transform: scale(1.2);
+    }
+    label .circle {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: border 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label .circle {
+      border: 4px solid green;
+    }
+    label img { 
+      width: 100%;
+      height: 100%;
+      transition: transform 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label .circle img {
+      transform: scale(1.1);
+    }
+
+    button {
+      font-weight: 400;
+      font-family: PFDinDisplayPro-Regular,sans-serif;
+      font-size: 1rem;
+      line-height: 1.4rem;
+      text-transform: uppercase;
+      background-color: #767676;
+      border-radius: .25rem;
+      border: none;
+      display: inline-block;
+      color: #fff;
+      min-width: 12rem;
+      text-align: center;
+      margin: 0 auto .7rem;
+      padding: .6rem;
+      -webkit-tap-highlight-color: #858585;
+    }
+
+    button:not(:disabled) {
+      background-color: #ff4700;
+      -webkit-tap-highlight-color: red;
+    }
+    
+
     .hidden { display: none; }
   </style>
 </head>
 <body>
-
-  <h2>Select Line & Station</h2>
-
-  <label>Line:
-    <select id="lineSelect">
-      <option value="">Select a line</option>
-    </select>
-  </label>
-  <br>
-  <input type="text" id="search" placeholder="Search stations..." class="hidden" />
-  <br>
-  <select id="stationSelect" size="6" class="hidden"></select>
-  <br>
-
-  <div id="directionContainer" class="hidden">
-    <label>Direction:
-      <select id="directionSelect">
-        <option value="">Select direction</option>
-        <option value="N">North (N)</option>
-        <option value="S">South (S)</option>
+  <h1>Next Train Watchface</h1>
+  <div class="lineSeparator"></div>
+  <h2>Select Station #1</h3>
+  <div class="section">
+    <h3>Select Station</h3>
+    <hr>
+    <span>From line...</span>
+    <br>
+    <label>
+      <select id="lineSearch">
+        <option value="">Select a line</option>
       </select>
     </label>
+    <br>
+    <input type="text" id="search" placeholder="Search stations..." class="hidden" />
+    <br>
+    <select id="stationSelect" size="6" class="hidden"></select>
+  </div>
+  <br>
+  <div class="section">
+    <h3>Select Trains</h3>
+    <hr>
+    <div id="lineSelectContainer" class="hidden">
+    </div>
+  </div>
+  <br>
+
+  <div class="section">
+    <h3>Select Direction</h3>
+    <hr>
+    <div id="directionContainer" class="hidden">
+      <label>
+        <select id="directionSelect">
+          <option value="">Select direction</option>
+          <option value="N">North (N)</option>
+          <option value="S">South (S)</option>
+        </select>
+      </label>
+    </div>
   </div>
   <br>
 
@@ -73,9 +203,10 @@ async function loadData() {
 }
 
 function initializeDropdown(lines, stops) {
-  const lineSelect = document.getElementById("lineSelect");
+  const lineSearch = document.getElementById("lineSearch");
   const searchInput = document.getElementById("search");
   const stationSelect = document.getElementById("stationSelect");
+  const lineSelectContainer = document.getElementById("lineSelectContainer");
   const directionContainer = document.getElementById("directionContainer");
   const directionSelect = document.getElementById("directionSelect");
   const submitBtn = document.getElementById("submitBtn");
@@ -87,12 +218,14 @@ function initializeDropdown(lines, stops) {
     const option = document.createElement("option");
     option.value = line.id;
     option.textContent = `${line.id} - ${line.name}`;
-    lineSelect.appendChild(option);
+    lineSearch.appendChild(option);
   });
 
-  lineSelect.addEventListener("change", () => {
-    const selectedLine = lines.find(line => line.id === lineSelect.value);
+  lineSearch.addEventListener("change", () => {
+    const selectedLine = lines.find(line => line.id === lineSearch.value);
     
+    lineSelectContainer.innerHTML = "";
+
     if (selectedLine) {
       // Filter stops within the line's route (start and end station included)
       const startStop = selectedLine.direction_N;
@@ -110,18 +243,6 @@ function initializeDropdown(lines, stops) {
       directionContainer.classList.remove("hidden");
       searchInput.value = "";
 
-      // Populate directions based on the selected line
-      // directionSelect.innerHTML = "";
-      
-      // const optionN = document.createElement("option");
-      // optionN.value = "N";
-      // optionN.textContent = selectedLine.direction_N;
-      // const optionS = document.createElement("option");
-      // optionS.value = "S";
-      // optionS.textContent = selectedLine.direction_S;
-      // directionSelect.appendChild(optionN);
-      // directionSelect.appendChild(optionS);
-
       submitBtn.disabled = true;
        
     } else {
@@ -138,8 +259,37 @@ function initializeDropdown(lines, stops) {
 
   stationSelect.addEventListener("change", () => {
     if (stationSelect.value) {
-      const selectedLine = lines.find(line => line.id === lineSelect.value);
+      const selectedLine = lines.find(line => line.id === lineSearch.value);
       const selectedStop = stops.find(stop => stop.id === stationSelect.value);
+
+      // Clear and repopulate radio buttons
+      lineSelectContainer.innerHTML = "";
+
+      if (selectedStop.lines) {
+        lineSelectContainer.classList.remove("hidden");
+
+        selectedStop.lines.forEach(line => {
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.name = "line";
+          checkbox.value = line.id;
+          checkbox.id = `line-${line.id}`;
+
+          const label = document.createElement("label");
+          label.htmlFor = checkbox.id;
+          const circle = document.createElement("span");
+          circle.classList.add("circle");
+          const icon = document.createElement("img");
+          icon.src = "/lineIcons/"+line.id+".svg";
+
+          lineSelectContainer.appendChild(checkbox);
+          lineSelectContainer.appendChild(label);
+          label.appendChild(circle);
+          circle.appendChild(icon);
+        });
+      } else {
+        lineSelectContainer.classList.add("hidden");
+      }
 
       directionSelect.innerHTML = "";
       if (selectedStop.direction_N != "") {
@@ -176,7 +326,7 @@ function initializeDropdown(lines, stops) {
       'station': `${stationId}${direction}`
     }
     
-    alert(`You selected: Line ${lineSelect.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
+    alert(`You selected: Line ${lineSearch.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
 
 
     // Determine the correct return URL (emulator vs real watch)
