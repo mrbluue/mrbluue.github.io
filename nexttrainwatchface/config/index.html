@@ -23,7 +23,6 @@
       font-family: PFDinDisplayPro-Regular, sans-serif;
       color: white;
       background-color: #333;
-      /* font-family: sans-serif;  */
       padding: 20px; 
 
     }
@@ -47,7 +46,7 @@
       /* animation: 1s ease-in 0s 1 forwards running lineSeparatorAppears; */
       background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 85, 85, 1) 50%, rgba(255, 85, 85, 1) 75%, rgba(255, 170, 170, 1) 75%, rgba(255, 170, 170, 1) 100%);
     }
-    select, input { margin: 10px 0; width: 300px; }
+    select, input { margin: 5px 0; width: 300px; }
     input[type="checkbox"] {
       -webkit-appearance: none;
       appearance: none; 
@@ -55,10 +54,51 @@
     }
     #search{
       box-sizing: border-box;
+      width: 100%;
+      margin-bottom: 2px;
     }
     #stationSelect {
       padding: 1px 2px;
     }
+    .stationSelectCustom {
+      padding: 2px 1px 2px 4px; /* take accnt of 11px of scrollbar to the right*/
+      height: 7em;
+      width: calc(100% - 8px); 
+      background: white;
+      overflow: scroll;
+      color: black;
+      font-size: 0.85rem;
+      border: #767676 1px solid;
+      border-radius: 2px;
+    }
+    .stationSelectOption {
+      /* padding-inline: 10px; */
+      padding: 1px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .stationSelectOption.selected{
+      background-color: #b3d7ff;
+    }
+
+    .stationSelectCustom::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    .stationSelectCustom::-webkit-scrollbar:vertical {
+        width: 11px;
+    }
+
+    .stationSelectCustom::-webkit-scrollbar:horizontal {
+        height: 0px;
+    }
+
+    .stationSelectCustom::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        border: 2px solid white; /* should match background, can't be transparent */
+        background-color: rgba(0, 0, 0, .5);
+    }
+
     #lineSelectContainer {
       display: flex;
       height: 35px;
@@ -117,7 +157,6 @@
       background-color: #ff4700;
       -webkit-tap-highlight-color: red;
     }
-    
 
     .hidden { display: none; }
   </style>
@@ -139,7 +178,12 @@
     <br>
     <input type="text" id="search" placeholder="Search stations..." class="hidden" />
     <br>
-    <select id="stationSelect" size="6" class="hidden"></select>
+    <!-- <select id="stationSelect" size="6" class="hidden"></select> -->
+    <div class="stationSelectCustom hidden" id="stationSelectCustom" tabindex="0">
+      <!-- <div class="custom-select-option" data-value="1">Option 1</div> -->
+    </div>
+    <input type="hidden" name="stationValue" id="stationValue">
+    <input type="hidden" name="stationName" id="stationName">
   </div>
   <br>
   <div class="section">
@@ -205,7 +249,10 @@ async function loadData() {
 function initializeDropdown(lines, stops) {
   const lineSearch = document.getElementById("lineSearch");
   const searchInput = document.getElementById("search");
-  const stationSelect = document.getElementById("stationSelect");
+  // const stationSelect = document.getElementById("stationSelect");
+  const stationSelectCustom = document.getElementById("stationSelectCustom");
+  const stationValue = document.getElementById("stationValue");
+  const stationName = document.getElementById("stationName");
   const lineSelectContainer = document.getElementById("lineSelectContainer");
   const directionContainer = document.getElementById("directionContainer");
   const directionSelect = document.getElementById("directionSelect");
@@ -239,7 +286,7 @@ function initializeDropdown(lines, stops) {
 
       renderStationOptions();
       searchInput.classList.remove("hidden");
-      stationSelect.classList.remove("hidden");
+      stationSelectCustom.classList.remove("hidden");
       directionContainer.classList.remove("hidden");
       searchInput.value = "";
 
@@ -247,7 +294,7 @@ function initializeDropdown(lines, stops) {
        
     } else {
       searchInput.classList.add("hidden");
-      stationSelect.classList.add("hidden");
+      stationSelectCustom.classList.add("hidden");
       directionContainer.classList.add("hidden");
       submitBtn.disabled = true;
     }
@@ -257,10 +304,10 @@ function initializeDropdown(lines, stops) {
     renderStationOptions(searchInput.value);
   });
 
-  stationSelect.addEventListener("change", () => {
-    if (stationSelect.value) {
+  stationValue.addEventListener("change", () => {
+    if (stationValue) {
       const selectedLine = lines.find(line => line.id === lineSearch.value);
-      const selectedStop = stops.find(stop => stop.id === stationSelect.value);
+      const selectedStop = stops.find(stop => stop.id === stationValue.value);
 
       // Clear and repopulate radio buttons
       lineSelectContainer.innerHTML = "";
@@ -352,14 +399,31 @@ function initializeDropdown(lines, stops) {
 
 
   function renderStationOptions(filter = "") {
-    stationSelect.innerHTML = "";
+    // stationSelect.innerHTML = "";
+    stationSelectCustom.innerHTML = "";
+    stationValue.removeAttribute("value");
     filteredStops
       .filter(s => s.name.toLowerCase().includes(filter.toLowerCase()))
       .forEach(s => {
-        const option = document.createElement("option");
-        option.value = s.id;
-        option.textContent = s.name;
-        stationSelect.appendChild(option);
+        // const option = document.createElement("option");
+        // option.value = s.id;
+        // option.textContent = s.name;
+        // stationSelect.appendChild(option);
+
+        const divOption = document.createElement('div');
+        divOption.className = 'stationSelectOption';
+        divOption.id = s.id;
+        divOption.textContent = s.name;
+        divOption.dataset.value = s.id;
+        stationSelectCustom.appendChild(divOption);
+
+        divOption.addEventListener('click', () => {
+          document.querySelectorAll('.stationSelectOption').forEach(el => el.classList.remove('selected'));
+          divOption.classList.add('selected');
+          stationValue.value = s.id;
+          stationName.value = s.name;
+        });
+        
       });
   }
 }
