@@ -52,6 +52,7 @@
       background: #484848;
       border-radius: .25rem;
       box-shadow: #2f2f2f 0 .15rem .25rem;
+      padding-bottom: 1rem;
     }
     .sectionHeader {
       background-color: #414141;
@@ -80,6 +81,9 @@
       width: 100%;
       height: 1px;
       pointer-events: none;
+    }
+    .component:last-child:after {
+      display: none;
     }
     .component-inline {
       display: flex;
@@ -269,6 +273,21 @@
       font-size: 1.1rem;
       text-decoration: underline;
     }
+    /* #station-result {
+      margin: 0 auto;
+      text-align: center; */
+      /* padding-left: 1rem; */
+      /* font-style: italic; */
+    /* } */
+
+    #trains-result {
+      display: flex;
+      align-items: center;
+    }
+
+    #trains-result span:first-child {
+      margin-right: 0.5rem;
+    }
 
     button {
       font-weight: 400;
@@ -315,7 +334,7 @@
       </div>
       <div class="customSelector" id="stationSelector">
         <div class="placeholder" id="placeholder-stations">Select a line to search stations</div>
-        <input type="text" id="stationSearch" placeholder="Search stations..." class="hidden" autocorrect="off" />
+        <input type="search" id="stationSearch" placeholder="Search stations..." class="hidden" autocorrect="off" />
         <div class="customSelectList hidden" id="stationSelectList" tabindex="0"></div>
         <input type="hidden" name="stationValue" id="stationValue">
         <input type="hidden" name="stationName" id="stationName">
@@ -325,6 +344,7 @@
       <div class="component-inline">
         <span class="label">Select Trains</span>
         <div id="lineSelectContainer" class="hidden">
+          <!-- <input type="checkbox" name="line-checkbox" class="line-checkbox" value=""> -->
         </div>
       </div>
     </div>
@@ -347,6 +367,13 @@
         </div>
         <input type="hidden" name="direction-value" id="direction-value" value="N">
       </div>
+    </div>
+    <div class="component">
+      <span>Selection: </span>
+      <br>
+      <span id="station-result"></span>
+      <br>
+      <span id="trains-result"></span>
     </div>
   </div>
   <button id="submitBtn" disabled>Submit</button>
@@ -404,6 +431,8 @@ function initializeDropdown(lines, stops) {
   const directionValue = document.getElementById("direction-value");
   const directionN = document.getElementById("direction-N");
   const directionS = document.getElementById("direction-S");
+  const stationResult = document.getElementById("station-result");
+  const trainsResult = document.getElementById("trains-result");
   const submitBtn = document.getElementById("submitBtn");
 
   let filteredStops = [];
@@ -450,6 +479,8 @@ function initializeDropdown(lines, stops) {
         stop.lines.some(line => line.id === lineID)
       );
 
+      stationResult.textContent = "";
+      trainsResult.textContent = "";
       renderStationOptions();
       placeholderStations.classList.add("hidden");
       searchInput.classList.remove("hidden");
@@ -481,6 +512,9 @@ function initializeDropdown(lines, stops) {
 
       directionContainer2.classList.remove("hidden");
 
+      stationName.value = selectedStop.name;
+      // stationResult.textContent = stationName.value;
+
       // Clear and repopulate radio buttons
       lineSelectContainer.innerHTML = "";
 
@@ -490,9 +524,14 @@ function initializeDropdown(lines, stops) {
         selectedStop.lines.forEach(line => {
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
-          checkbox.name = "line";
+          checkbox.name = "line-checkbox";
+          checkbox.classList.add("line-checkbox");
           checkbox.value = line.id;
           checkbox.id = `line-${line.id}`;
+
+          checkbox.addEventListener('click', () => {
+            setStationResult();
+          });
 
           const label = document.createElement("label");
           label.htmlFor = checkbox.id;
@@ -536,6 +575,8 @@ function initializeDropdown(lines, stops) {
         setDirection(directionValue.value);
       }
 
+      setStationResult();
+
       submitBtn.disabled = false;
     } else {
       directionContainer2.classList.remove("hidden");
@@ -553,19 +594,7 @@ function initializeDropdown(lines, stops) {
 
     setDirection(directionValue.value);
 
-    // rotation += 180;
-    // directionArrow.style.transform = `rotate(${rotation}deg)`;
-
-    // if(directionArrow.dataset.value === "N") {
-    //   directionN.classList.add("option-focused");
-    //   directionS.classList.remove("option-focused");
-    //   return;
-    // }
-    // if(directionArrow.dataset.value === "S") {
-    //   directionN.classList.remove("option-focused");
-    //   directionS.classList.add("option-focused");
-    //   return;
-    // }
+    setStationResult();
 
   });
 
@@ -602,10 +631,12 @@ function initializeDropdown(lines, stops) {
 
     document.location = return_to + encodeURIComponent(JSON.stringify(dataToBeSent));
 
+    // var checkedValue = document.querySelector('.line-checkbox:checked').value;
+    // alert(trainsChecked.value);
+
     // alert(``);
 
-
-
+    getSelectedTrains();
 
   });
 
@@ -627,6 +658,48 @@ function initializeDropdown(lines, stops) {
       directionS.classList.add("option-focused");
       return;
     }
+  }
+
+  function getSelectedTrains(){
+    var checkedElements = document.querySelectorAll('.line-checkbox:checked');
+    var checkedTrains = [...checkedElements];
+    var trainsValues = [];
+    checkedTrains.forEach(train => {
+      trainsValues.push(train.value);
+    });
+    // alert(JSON.stringify(trainsValues));
+    return trainsValues;
+  }
+
+  function setStationResult(){
+    stationResult.textContent = "";
+    var stationText = stationName.value;
+    var directionText = (directionValue.value === "N" ? directionN.textContent : directionS.textContent)
+    const stationItalic = document.createElement("i");
+    stationItalic.textContent = stationText;
+    const towards = document.createElement("span");
+    towards.textContent = " towards ";
+    towards.style = "font-size: 0.9rem;";
+    const directionItalic = document.createElement("i");
+    directionItalic.textContent = directionText;
+    stationResult.appendChild(stationItalic);
+    stationResult.appendChild(towards);
+    stationResult.appendChild(directionItalic);
+
+    trainsResult.textContent = "";
+    const trainsLabel = document.createElement("span");
+    trainsLabel.textContent = "Trains: ";
+    var checkedTrains = getSelectedTrains();
+    if(checkedTrains[0] != null) { 
+      trainsResult.appendChild(trainsLabel);
+    }
+    checkedTrains.forEach(train => {
+      const trainIcon = document.createElement("img");
+      trainIcon.src = "lineIcons/"+train+".svg";
+      trainsResult.appendChild(trainIcon);
+    });
+    console.log(JSON.stringify(getSelectedTrains()));
+    // stationResult.textContent = "<i>" + stationName.value + "</i> towards <i>" + directionText + "</i>";
   }
 
   function renderStationOptions(filter = "") {
@@ -660,7 +733,6 @@ function initializeDropdown(lines, stops) {
           document.querySelectorAll('#stationSelectOption').forEach(el => el.classList.remove('selected'));
           divOption.classList.add('selected');
           stationValue.value = s.id;
-          stationName.value = s.name;
 
           const event = new Event('change', { bubbles: true });
           stationValue.dispatchEvent(event);
