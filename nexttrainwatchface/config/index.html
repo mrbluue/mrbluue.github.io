@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Line & Stop Selector</title>  
-
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <style>
     @font-face { 
       font-family:PFDinDisplayProRegularWebfont;
@@ -92,6 +92,11 @@
       align-items: center;
       padding: 0.25rem 0;
     }
+    iframe{
+      border: 0;
+      width: 100%;
+      overflow: hidden;
+    }
     .label {
       display: flex;
       /* width: 100%; */
@@ -107,187 +112,7 @@
       color: #a4a4a4;
     }
 
-    select, input { margin: 5px 0; width: 300px; }
-    input[type="checkbox"] {
-      -webkit-appearance: none;
-      appearance: none; 
-      width: auto !important;
-    }
-    .customSelector {
-      border: #767676 1px solid;
-      border-radius: 2px;
-      padding: 0 0 0 0.5rem;
-      padding-bottom: 0;
-      background: white;
-      min-height: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    .placeholder {
-      width: 100%;
-      text-align: center;
-      color: #a4a4a4;
-      font-size: 0.75rem;
-      padding: 0.2rem 0;
-      position: relative;
-      top: 2px;
-    }
-    #stationSearch{
-      font: inherit;
-      box-sizing: border-box;
-      width: calc(100% - 24px);
-      height: 2rem;
-      margin: 0;
-      border: 0;
-      border-bottom: 2px #414141 solid;
-      margin-right: 24px;
-      margin-left: 3px;
-      padding-top: 0.5rem;
-    }
-    #stationSearch:focus{
-      outline: 0;
-      border-bottom: 2px #ff4700 solid;
-    }
-    .customSelectList {
-      padding: 0.5rem 1px 2px 4px; /* take accnt of 11px of scrollbar to the right*/
-      height: 7em;
-      width: 100%;
-      width: calc(100% - 5px); 
-      /* background: rgb(221, 221, 221); */
-      overflow: scroll;
-      color: black;
-      /* font-size: 0.85rem; */
-    }
-    /* #stationSelectList {
-      padding: 0.75rem 0;
-    } */
-    .customSelectOption {
-      /* padding-inline: 10px; */
-      padding: 1px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .customSelectOption.selected {
-      background-color: #b3d7ff;
-    }
-    #lineSelectOption {
-      display: flex;
-      align-items: center;
-      flex-wrap: nowrap;
-    }
-    #lineSelectOption img {
-      margin-right: 0.5rem;
-      /* display: flex;
-      align-items: center; */
-    }
-    #lineSelectOption span {
-      position: relative;
-      top: 2px;
-    }
-    .customSelectList::-webkit-scrollbar {
-        -webkit-appearance: none;
-    }
-
-    .customSelectList::-webkit-scrollbar:vertical {
-        width: 16px;
-    }
-
-    .customSelectList::-webkit-scrollbar:horizontal {
-        height: 0px;
-    }
-
-    .customSelectList::-webkit-scrollbar-thumb {
-        border-radius: 8px;
-        border: 2px solid white; /* should match background, can't be transparent */
-        background-color: rgba(0, 0, 0, .5);
-    }
-
-    #lineSelectContainer {
-      display: flex;
-      height: 35px;
-      justify-content: center;
-      /* overflow: hidden; */
-    }
-    #lineSelectContainer label { 
-      display: block;
-      width: 35px;
-      height: 35px;
-      margin-right: 10px;
-      transition: transform 100ms ease-in-out;
-    }
-    input[type="checkbox"]:checked + label {
-      transform: scale(1.2);
-    }
-    label .circle {
-      position: relative;
-      display: inline-block;
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      overflow: hidden;
-      transition: border 100ms ease-in-out;
-    }
-    label .circle::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 0px solid black;
-      box-shadow: inset 0 0 0px black;
-      pointer-events: none; 
-      z-index: 1;
-      transition: border 100ms ease-in-out;
-    }
-    input[type="checkbox"]:checked + label .circle {
-      /* border: 4px solid green; */
-      border: 3px solid #ff4700;
-    }
-    input[type="checkbox"]:checked + label .circle::before {
-      /* box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.60); */
-      border: 1.5px solid #414141;
-    }
-    label img { 
-      width: 100%;
-      height: 100%;
-      transition: transform 100ms ease-in-out;
-      /* box-shadow: inset 0px 0px 15px 5px black; */
-    }
-    input[type="checkbox"]:checked + label .circle img {
-      transform: scale(1.1);
-    }
-
-    #direction-container {
-      min-width: 40%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
-    }
-    .direction-arrow {
-      font-size: 3rem;
-      cursor: pointer;
-      transition: transform 100ms ease-in-out;
-    }
-    .option-focused {
-      font-weight: bold;
-      font-size: 1.1rem;
-      text-decoration: underline;
-    }
-    /* #station-result {
-      margin: 0 auto;
-      text-align: center; */
-      /* padding-left: 1rem; */
-      /* font-style: italic; */
-    /* } */
-
-    #trains-result {
-      display: flex;
-      align-items: center;
-    }
-
-    #trains-result span:first-child {
-      margin-right: 0.5rem;
-    }
+    /* select, input { margin: 5px 0; width: 300px; } */
 
     button {
       font-weight: 400;
@@ -326,424 +151,171 @@
     <div class="sectionHeader">
       <h3>Select Station #1</h3>
     </div>
-    <div class="component">
-      <span class="label label-center">Find from line</span>
-      <div class="customSelector" id="lineSelector">
-        <div class="customSelectList" id="lineSelectList" tabindex="0"></div>
-        <input type="hidden" name="lineValue" id="lineValue">
-      </div>
-      <div class="customSelector" id="stationSelector">
-        <div class="placeholder" id="placeholder-stations">Select a line to search stations</div>
-        <input type="search" id="stationSearch" placeholder="Search stations..." class="hidden" autocorrect="off" />
-        <div class="customSelectList hidden" id="stationSelectList" tabindex="0"></div>
-        <input type="hidden" name="stationValue" id="stationValue">
-        <input type="hidden" name="stationName" id="stationName">
-      </div>
-    </div>
+    <iframe src="station-select.html" id="station1-iframe"></iframe>
+    <input type="hidden" id="station1"/>
     <div class="component">
       <div class="component-inline">
-        <span class="label">Select Trains</span>
-        <div id="lineSelectContainer" class="hidden">
-          <!-- <input type="checkbox" name="line-checkbox" class="line-checkbox" value=""> -->
-        </div>
+        <label for="s1-t1">Show from</label>
+        <input type="time" id="s1-t1"/>
       </div>
-    </div>
-    <div class="component">
       <div class="component-inline">
-        <span class="label">Select Direction</span>
-        <div id="direction-container" class="hidden">
-          <div class="direction-option option-focused" id="direction-N" data-value="N">North</div>
-          <div class="direction-arrow" id="direction-arrow" data-value="N">↑</div>
-          <div class="direction-option" id="direction-S" data-value="S">South</div>
-        </div>
-        <div id="directionContainer" class="hidden">
-          <label>
-            <select id="directionSelect">
-              <option value="">Select direction</option>
-              <option value="N">North (N)</option>
-              <option value="S">South (S)</option>
-            </select>
-          </label>
-        </div>
-        <input type="hidden" name="direction-value" id="direction-value" value="N">
+        <label for="s1-t2">Show until</label>
+        <input type="time" id="s1-t2"/>
       </div>
-    </div>
-    <div class="component">
-      <span>Selection: </span>
-      <br>
-      <span id="station-result"></span>
-      <br>
-      <span id="trains-result"></span>
     </div>
   </div>
-  <button id="submitBtn" disabled>Submit</button>
+  <div class="section">
+    <div class="sectionHeader">
+      <h3>Select Station #2</h3>
+    </div>
+    <iframe src="station-select.html" id="station2-iframe"></iframe>
+    <input type="hidden" id="station2"/>
+    <div class="component">
+      <div class="component-inline">
+        <label for="s2-t1">Show from</label>
+        <input type="time" id="s2-t1"/>
+      </div>
+      <div class="component-inline">
+        <label for="s2-t2">Show until</label>
+        <input type="time" id="s2-t2"/>
+      </div>
+    </div>
+  </div>
+  </div>
+  <button id="submitBtn">Submit</button>
 
- <script>
-async function fetchCSV(url) {
-  const response = await fetch(url);
-  const text = await response.text();
-  
-  return text.split("\n").slice(1).map(row => {
-    const values = row.split(",");
-    return values;
-  });
-}
+<script>
+  const iframes = [
+    document.getElementById('station1-iframe'),
+    document.getElementById('station2-iframe')
+  ];
 
-async function loadData() {
-  const rawLines = await fetchCSV("lines.csv");
-  const rawStops = await fetchCSV("stations.csv");
+  iframes.forEach(iframe => {
+    iframe.addEventListener('load', function () {
+      try {
+        const contentDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const newHeight = contentDoc.body.scrollHeight;
 
-  // Convert CSV to objects
-  const lines = rawLines.map(row => ({
-    id: row[1],  // route_id
-    name: row[3], // route_long_name
-    direction_N: row[5], // route_direction_N (start station)
-    direction_S: row[6], // route_direction_S (end station)
-  }));
-
-  const stops = rawStops.map(row => ({
-    id: row[0],  // stop_id
-    name: row[5], // stop_name
-    lines: row[8] ? row[8].split(" ").map(line => ({ id: line })) : [], // Safety check
-    direction_N: row[12],
-    direction_S: row[13]
-  }));
-
-
-  initializeDropdown(lines, stops);
-}
-
-function initializeDropdown(lines, stops) {
-  // const lineSearch = document.getElementById("lineSearch");
-  const lineSelectCustom = document.getElementById("lineSelectList");
-  const lineValue = document.getElementById("lineValue");
-  const placeholderStations = document.getElementById("placeholder-stations");
-  const searchInput = document.getElementById("stationSearch");
-  // const stationSelect = document.getElementById("stationSelect");
-  const stationSelectCustom = document.getElementById("stationSelectList");
-  const stationValue = document.getElementById("stationValue");
-  const stationName = document.getElementById("stationName");
-  const lineSelectContainer = document.getElementById("lineSelectContainer");
-  const directionContainer = document.getElementById("directionContainer");
-  const directionContainer2 = document.getElementById("direction-container");
-  const directionSelect = document.getElementById("directionSelect");
-  const directionArrow = document.getElementById("direction-arrow");
-  const directionValue = document.getElementById("direction-value");
-  const directionN = document.getElementById("direction-N");
-  const directionS = document.getElementById("direction-S");
-  const stationResult = document.getElementById("station-result");
-  const trainsResult = document.getElementById("trains-result");
-  const submitBtn = document.getElementById("submitBtn");
-
-  let filteredStops = [];
-
-  let rotation = 0;
-
-  // --- Populate Line Dropdown ---
-  lines.forEach(line => {
-    const divOption = document.createElement('div');
-    divOption.className = 'customSelectOption';
-    divOption.id = 'lineSelectOption';
-    divOption.dataset.value = line.id;
-    const text = document.createElement('span');
-    text.textContent = `${line.name}`;
-    const icon = document.createElement("img");
-    lineSelectCustom.appendChild(divOption);
-    icon.src = "lineIcons/"+line.id+".svg";
-    divOption.appendChild(icon);
-    divOption.appendChild(text);
-
-    divOption.addEventListener('click', () => {
-      document.querySelectorAll('#lineSelectOption').forEach(el => el.classList.remove('selected'));
-      divOption.classList.add('selected');
-      lineValue.value = line.id;
-
-      const event = new Event('change', { bubbles: true });
-      lineValue.dispatchEvent(event);
+        iframe.style.height = newHeight + 'px';
+        console.log("iframe loaded, new height:", newHeight);
+      } catch (e) {
+        console.warn("Couldn't access iframe content (cross-origin?):", e);
+      }
     });
   });
 
-  lineValue.addEventListener("change", () => {
-    const selectedLine = lines.find(line => line.id === lineValue.value);
-    
-    lineSelectContainer.innerHTML = "";
-
-    if (selectedLine) {
-      // Filter stops within the line's route (start and end station included)
-      const startStop = selectedLine.direction_N;
-      const endStop = selectedLine.direction_S;
-
-      const lineID = selectedLine.id
-
-      filteredStops = stops.filter(stop => 
-        stop.lines.some(line => line.id === lineID)
-      );
-
-      stationResult.textContent = "";
-      trainsResult.textContent = "";
-      renderStationOptions();
-      placeholderStations.classList.add("hidden");
-      searchInput.classList.remove("hidden");
-      stationSelectCustom.classList.remove("hidden");
-      // directionContainer.classList.remove("hidden");
-      searchInput.value = "";
-
-      submitBtn.disabled = true;
-       
-    } else {
-      placeholderStations.classList.remove("hidden");
-      searchInput.classList.add("hidden");
-      stationSelectCustom.classList.add("hidden");
-      // directionContainer.classList.add("hidden");
-      directionContainer2.classList.add("hidden");
-      submitBtn.disabled = true;
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'resize') {
+      for (const iframe of iframes) {
+        if (iframe.contentWindow === event.source) {
+          iframe.style.height = event.data.height + 'px';
+          console.log(`Resized ${iframe.id} to ${event.data.height}px`);
+          break;
+        }
+      }
+      return;
+    }
+    if (event.data.type === 'result') {
+      for (const iframe of iframes) {
+        if (iframe.contentWindow === event.source) {
+          iframe.style.height = event.data.height + 'px';
+          console.log(`Result from station #${iframe.id}: station ${event.data.station} / trains ${JSON.stringify(event.data.trains)} / direction ${event.data.direction}`);
+          break;
+        }
+      }
     }
   });
 
-  searchInput.addEventListener("input", () => {
-    renderStationOptions(searchInput.value);
-  });
+  function toMinutes(timeStr) {
+    const [h, m] = timeStr.split(':').map(Number);
+    return h * 60 + m;
+  }
 
-  stationValue.addEventListener("change", () => {
-    console.log(stationValue.value);
-    if (stationValue.value) {
-      const selectedLine = lines.find(line => line.id === lineValue.value);
-      const selectedStop = stops.find(stop => stop.id === stationValue.value);
+  function addDayInterval(i) {
+    return { start: i.start + 1440, end: i.end + 1440 };
+  }
 
-      directionContainer2.classList.remove("hidden");
-
-      stationName.value = selectedStop.name;
-      // stationResult.textContent = stationName.value;
-
-      // Clear and repopulate radio buttons
-      lineSelectContainer.innerHTML = "";
-
-      if (selectedStop.lines) {
-        lineSelectContainer.classList.remove("hidden");
-
-        selectedStop.lines.forEach(line => {
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.name = "line-checkbox";
-          checkbox.classList.add("line-checkbox");
-          checkbox.value = line.id;
-          checkbox.id = `line-${line.id}`;
-
-          checkbox.addEventListener('click', () => {
-            setStationResult();
-          });
-
-          const label = document.createElement("label");
-          label.htmlFor = checkbox.id;
-          const circle = document.createElement("span");
-          circle.classList.add("circle");
-          const icon = document.createElement("img");
-          icon.src = "lineIcons/"+line.id+".svg";
-
-          lineSelectContainer.appendChild(checkbox);
-          lineSelectContainer.appendChild(label);
-          label.appendChild(circle);
-          circle.appendChild(icon);
-        });
-      } else {
-        lineSelectContainer.classList.add("hidden");
-      }
-
-      directionSelect.innerHTML = "";
-      directionN.textContent = "";
-      directionS.textContent = "";
-      if (selectedStop.direction_N != "") {
-        const optionN = document.createElement("option");
-        optionN.value = "N";
-        optionN.textContent = selectedStop.direction_N;
-        directionN.textContent = selectedStop.direction_N;
-        directionSelect.appendChild(optionN);
-      }
-      else {
-        directionValue.value = "S";
-        setDirection(directionValue.value);
-      }
-      if (selectedStop.direction_S != "") {
-        const optionS = document.createElement("option");
-        optionS.value = "S";
-        optionS.textContent = selectedStop.direction_S;
-        directionS.textContent = selectedStop.direction_S;
-        directionSelect.appendChild(optionS);
-      }
-      else {
-        directionValue.value = "N";
-        setDirection(directionValue.value);
-      }
-
-      setStationResult();
-
-      submitBtn.disabled = false;
-    } else {
-      directionContainer2.classList.remove("hidden");
-      submitBtn.disabled = true;
+  function normalizeInterval(start, end) {
+    if (end <= start) {
+      // Spans midnight
+      end += 1440; // Add 24h in minutes
     }
-  });
+    return { start, end };
+  }
 
-  directionArrow.addEventListener("click", () => {
-    // directionArrow.dataset.value = directionArrow.dataset.value === "N" ? "S" : "N";
-    var direction = directionValue.value === "N" ? "S" : "N";
-    
-    if((direction === "N" && directionN.textContent != "") || (direction === "S" && directionS.textContent != "")) {
-      directionValue.value = directionValue.value === "N" ? "S" : "N";
-    }
+  function intervalsOverlap(a, b) {
+    return a.start < b.end && b.start < a.end;
+  }
 
-    setDirection(directionValue.value);
+  function checkOverlap() {
+    const t1 = document.getElementById('s1-t1').value;
+    const t2 = document.getElementById('s1-t2').value;
+    const t3 = document.getElementById('s2-t1').value;
+    const t4 = document.getElementById('s2-t2').value;
 
-    setStationResult();
-
-  });
-
-  submitBtn.addEventListener("click", () => {
-    const stationId = stationValue.value;
-    const stationName = filteredStops.find(s => s.id === stationId).name;
-    const direction = directionSelect.value;
-    
-    if (!direction) {
-      alert("Please select a direction.");
+    if (!t1 || !t2 || !t3 || !t4) {
+      alert("Please fill all times.");
       return;
     }
 
-    var dataToBeSent = {
-      'station': `${stationId}${direction}`
-    }
+    let i1 = normalizeInterval(toMinutes(t1), toMinutes(t2));
+    let i2 = normalizeInterval(toMinutes(t3), toMinutes(t4));
+
+    // Handle both intervals possibly spanning midnight by duplicating and comparing in extended space
+    const overlap =
+      intervalsOverlap(i1, i2) ||
+      intervalsOverlap(i1, addDayInterval(i2)) ||
+      intervalsOverlap(addDayInterval(i1), i2);
+
+    alert(overlap ? "wrong" : "yay");
+
+  }
+
+  const submitBtn = document.getElementById("submitBtn");
+
+  submitBtn.addEventListener("click", () => {
+    // const stationId = stationValue.value;
+    // const stationName = filteredStops.find(s => s.id === stationId).name;
+    // const direction = directionSelect.value;
     
-    alert(`You selected: Line ${lineValue.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
+    checkOverlap();
+
+    // if (!direction) {
+    //   alert("Please select a direction.");
+    //   return;
+    // }
+
+    // var dataToBeSent = {
+    //   'station': `${stationId}${direction}`
+    // }
+    
+    // alert(`You selected: Line ${lineValue.value} → ${stationName} (${direction})\nSending ${dataToBeSent['station']}`);
 
 
-    // Determine the correct return URL (emulator vs real watch)
-    function getQueryParam(variable, defaultValue) {
-      var query = location.search.substring(1);
-      var vars = query.split('&');
-      for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=');
-        if (pair[0] === variable) {
-          return decodeURIComponent(pair[1]);
-        }
-      }
-      return defaultValue || false;
-    }
-    var return_to = getQueryParam('return_to', 'pebblejs://close#');
+    // // Determine the correct return URL (emulator vs real watch)
+    // function getQueryParam(variable, defaultValue) {
+    //   var query = location.search.substring(1);
+    //   var vars = query.split('&');
+    //   for (var i = 0; i < vars.length; i++) {
+    //     var pair = vars[i].split('=');
+    //     if (pair[0] === variable) {
+    //       return decodeURIComponent(pair[1]);
+    //     }
+    //   }
+    //   return defaultValue || false;
+    // }
+    // var return_to = getQueryParam('return_to', 'pebblejs://close#');
 
-    document.location = return_to + encodeURIComponent(JSON.stringify(dataToBeSent));
+    // document.location = return_to + encodeURIComponent(JSON.stringify(dataToBeSent));
 
     // var checkedValue = document.querySelector('.line-checkbox:checked').value;
     // alert(trainsChecked.value);
 
     // alert(``);
 
-    getSelectedTrains();
+    // getSelectedTrains();
 
   });
-
-  function setDirection(direction) {
-    directionArrow.dataset.value = direction;
-    // directionValue.value = direction;
-
-    rotation += ((rotation % 360 == 0) && (direction == "S")) || ((rotation % 360 == 180) && (direction == "N")) ? 180 : 0;
-
-    directionArrow.style.transform = `rotate(${rotation}deg)`;
-
-    if(directionValue.value === "N") {
-      directionN.classList.add("option-focused");
-      directionS.classList.remove("option-focused");
-      return;
-    }
-    if(directionValue.value === "S") {
-      directionN.classList.remove("option-focused");
-      directionS.classList.add("option-focused");
-      return;
-    }
-  }
-
-  function getSelectedTrains(){
-    var checkedElements = document.querySelectorAll('.line-checkbox:checked');
-    var checkedTrains = [...checkedElements];
-    var trainsValues = [];
-    checkedTrains.forEach(train => {
-      trainsValues.push(train.value);
-    });
-    // alert(JSON.stringify(trainsValues));
-    return trainsValues;
-  }
-
-  function setStationResult(){
-    stationResult.textContent = "";
-    var stationText = stationName.value;
-    var directionText = (directionValue.value === "N" ? directionN.textContent : directionS.textContent)
-    const stationItalic = document.createElement("i");
-    stationItalic.textContent = stationText;
-    const towards = document.createElement("span");
-    towards.textContent = " towards ";
-    towards.style = "font-size: 0.9rem;";
-    const directionItalic = document.createElement("i");
-    directionItalic.textContent = directionText;
-    stationResult.appendChild(stationItalic);
-    stationResult.appendChild(towards);
-    stationResult.appendChild(directionItalic);
-
-    trainsResult.textContent = "";
-    const trainsLabel = document.createElement("span");
-    trainsLabel.textContent = "Trains: ";
-    var checkedTrains = getSelectedTrains();
-    if(checkedTrains[0] != null) { 
-      trainsResult.appendChild(trainsLabel);
-    }
-    checkedTrains.forEach(train => {
-      const trainIcon = document.createElement("img");
-      trainIcon.src = "lineIcons/"+train+".svg";
-      trainsResult.appendChild(trainIcon);
-    });
-    console.log(JSON.stringify(getSelectedTrains()));
-    // stationResult.textContent = "<i>" + stationName.value + "</i> towards <i>" + directionText + "</i>";
-  }
-
-  function renderStationOptions(filter = "") {
-    // stationSelect.innerHTML = "";
-    stationSelectCustom.innerHTML = "";
-    stationValue.removeAttribute("value");
-    filteredStops
-      .filter(s => s.name.toLowerCase().includes(filter.toLowerCase()))
-      .forEach(s => {
-        // const option = document.createElement("option");
-        // option.value = s.id;
-        // option.textContent = s.name;
-        // stationSelect.appendChild(option);
-        var lines = "(";
-        s.lines.forEach(l => { 
-          lines = "" + lines + "" + l.id + "";
-        });
-
-        // if(s.lines.id.includes("SI")) {
-        //   lines = "";
-        // }
-
-        const divOption = document.createElement('div');
-        divOption.className = 'customSelectOption';
-        divOption.id = 'stationSelectOption';
-        divOption.textContent = s.name + ' '+ lines +')';
-        divOption.dataset.value = s.id;
-        stationSelectCustom.appendChild(divOption);
-
-        divOption.addEventListener('click', () => {
-          document.querySelectorAll('#stationSelectOption').forEach(el => el.classList.remove('selected'));
-          divOption.classList.add('selected');
-          stationValue.value = s.id;
-
-          const event = new Event('change', { bubbles: true });
-          stationValue.dispatchEvent(event);
-        });
-        
-      });
-  }
-}
-
-// Load data on page load
-loadData();
 </script>
 
 

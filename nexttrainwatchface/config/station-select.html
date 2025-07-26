@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Line & Stop Selector</title>  
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <style>
+
+    @font-face {
+        font-family: PFDinDisplayPro-Regular;
+        src: url("resources/PFDinDisplayPro-Regular.ttf");
+    }
+    
+    body { 
+      font-family: PFDinDisplayPro-Regular, PFDinDisplayProRegularWebfont, sans-serif;
+      color: white;
+      background-color: #333;
+      /* padding: 1rem .75rem .7rem; */
+      margin: 0; 
+    }
+    h3, h4, h5, h6 { 
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .component {
+      background: #484848;
+        padding: 0.5rem 0.5rem 0 0.5rem;
+    }
+    .component::after {
+      content: "";
+      background: #666;
+      display: block;
+      position: relative;
+      margin-top: 0.5rem;
+      width: 100%;
+      height: 1px;
+      pointer-events: none;
+    }
+    .component:last-child:after {
+      display: none;
+    }
+    .component-inline {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0;
+    }
+    .label {
+      display: flex;
+    }
+    .label-center {
+      justify-content: center;
+      margin-bottom: 0.25rem;
+    }
+    .component-inline .label {
+      max-width: 100%;
+    }
+    h6 {
+      color: #a4a4a4;
+    }
+    select, input { margin: 5px 0; width: 300px; }
+    input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none; 
+      width: auto !important;
+    }
+    .customSelector {
+      border: #767676 1px solid;
+      border-radius: 2px;
+      padding: 0 0 0 0.5rem;
+      padding-bottom: 0;
+      background: white;
+      min-height: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .placeholder {
+      width: 100%;
+      text-align: center;
+      color: #a4a4a4;
+      font-size: 0.75rem;
+      padding: 0.2rem 0;
+      position: relative;
+      top: 2px;
+    }
+    #stationSearch{
+      font: inherit;
+      box-sizing: border-box;
+      width: calc(100% - 24px);
+      height: 2rem;
+      margin: 0;
+      border: 0;
+      border-bottom: 2px #414141 solid;
+      margin-right: 24px;
+      margin-left: 3px;
+      padding-top: 0.5rem;
+    }
+    #stationSearch:focus{
+      outline: 0;
+      border-bottom: 2px #ff4700 solid;
+    }
+    .customSelectList {
+      padding: 0.5rem 1px 2px 4px; /* take accnt of 11px of scrollbar to the right*/
+      height: 7em;
+      width: 100%;
+      width: calc(100% - 5px); 
+      overflow: scroll;
+      color: black;
+    }
+    .customSelectOption {
+      padding: 1px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .customSelectOption.selected {
+      background-color: #b3d7ff;
+    }
+    #lineSelectOption {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+    #lineSelectOption img {
+      margin-right: 0.5rem;
+      /* display: flex;
+      align-items: center; */
+    }
+    #lineSelectOption span {
+      position: relative;
+      top: 2px;
+    }
+    .customSelectList::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    .customSelectList::-webkit-scrollbar:vertical {
+        width: 16px;
+    }
+
+    .customSelectList::-webkit-scrollbar:horizontal {
+        height: 0px;
+    }
+
+    .customSelectList::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        border: 2px solid white; /* should match background, can't be transparent */
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    #lineSelectContainer {
+      display: flex;
+      height: 35px;
+      justify-content: center;
+      /* overflow: hidden; */
+    }
+    #lineSelectContainer label { 
+      display: block;
+      width: 35px;
+      height: 35px;
+      margin-right: 10px;
+      transition: transform 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label {
+      transform: scale(1.2);
+    }
+    label .circle {
+      position: relative;
+      display: inline-block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: border 100ms ease-in-out;
+    }
+    label .circle::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 0px solid black;
+      box-shadow: inset 0 0 0px black;
+      pointer-events: none; 
+      z-index: 1;
+      transition: border 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label .circle {
+      border: 3px solid #ff4700;
+    }
+    input[type="checkbox"]:checked + label .circle::before {
+      border: 1.5px solid #414141;
+    }
+    label img { 
+      width: 100%;
+      height: 100%;
+      transition: transform 100ms ease-in-out;
+    }
+    input[type="checkbox"]:checked + label .circle img {
+      transform: scale(1.1);
+    }
+
+    #direction-container {
+      min-width: 40%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    .direction-arrow {
+      font-size: 3rem;
+      cursor: pointer;
+      transition: transform 100ms ease-in-out;
+    }
+    .option-focused {
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-decoration: underline;
+    }
+
+    #trains-result {
+      display: flex;
+      align-items: center;
+    }
+
+    #trains-result span:first-child {
+      margin-right: 0.5rem;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+    <div class="component">
+      <span class="label label-center">Find from line</span>
+      <div class="customSelector" id="lineSelector">
+        <div class="customSelectList" id="lineSelectList" tabindex="0"></div>
+        <input type="hidden" name="lineValue" id="lineValue">
+      </div>
+      <div class="customSelector" id="stationSelector">
+        <div class="placeholder" id="placeholder-stations">Select a line to search stations</div>
+        <input type="search" id="stationSearch" placeholder="Search stations..." class="hidden" autocorrect="off" />
+        <div class="customSelectList hidden" id="stationSelectList" tabindex="0"></div>
+        <input type="hidden" name="stationValue" id="stationValue">
+        <input type="hidden" name="stationName" id="stationName">
+      </div>
+    </div>
+    <div class="component">
+      <div class="component-inline">
+        <span class="label">Select Trains</span>
+        <div id="lineSelectContainer" class="hidden">
+          <!-- <input type="checkbox" name="line-checkbox" class="line-checkbox" value=""> -->
+        </div>
+      </div>
+    </div>
+    <div class="component">
+      <div class="component-inline">
+        <span class="label">Select Direction</span>
+        <div id="direction-container" class="hidden">
+          <div class="direction-option option-focused" id="direction-N" data-value="N">North</div>
+          <div class="direction-arrow" id="direction-arrow" data-value="N">↑</div>
+          <div class="direction-option" id="direction-S" data-value="S">South</div>
+        </div>
+        <div id="directionContainer" class="hidden">
+          <label>
+            <select id="directionSelect">
+              <option value="">Select direction</option>
+              <option value="N">North (N)</option>
+              <option value="S">South (S)</option>
+            </select>
+          </label>
+        </div>
+        <input type="hidden" name="direction-value" id="direction-value" value="N">
+      </div>
+    </div>
+    <div class="component">
+      <span>Selection: </span>
+      <br>
+      <span id="station-result"></span>
+      <br>
+      <span id="trains-result"></span>
+    </div>
+ <script>
+
+function sendHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({
+      type: 'resize',
+      height: height
+    }, '*'); // You can replace '*' with the parent's origin for security
+}
+
+function sendUpdate(stationResult, trainsResult, directionResult) {
+    window.parent.postMessage({
+      type: "result",
+      station: stationResult,
+      trains: trainsResult,
+      direction: directionResult
+    }, '*'); // You can replace '*' with the parent's origin for security
+}
+
+async function fetchCSV(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  
+  return text.split("\n").slice(1).map(row => {
+    const values = row.split(",");
+    return values;
+  });
+}
+
+async function loadData() {
+  const rawLines = await fetchCSV("lines.csv");
+  const rawStops = await fetchCSV("stations.csv");
+
+  // Convert CSV to objects
+  const lines = rawLines.map(row => ({
+    id: row[1],  // route_id
+    name: row[3], // route_long_name
+    direction_N: row[5], // route_direction_N (start station)
+    direction_S: row[6], // route_direction_S (end station)
+  }));
+
+  const stops = rawStops.map(row => ({
+    id: row[0],  // stop_id
+    name: row[5], // stop_name
+    lines: row[8] ? row[8].split(" ").map(line => ({ id: line })) : [], // Safety check
+    direction_N: row[12],
+    direction_S: row[13]
+  }));
+
+
+  initializeDropdown(lines, stops);
+}
+
+function initializeDropdown(lines, stops) {
+  const lineSelectCustom = document.getElementById("lineSelectList");
+  const lineValue = document.getElementById("lineValue");
+  const placeholderStations = document.getElementById("placeholder-stations");
+  const searchInput = document.getElementById("stationSearch");
+  const stationSelectCustom = document.getElementById("stationSelectList");
+  const stationValue = document.getElementById("stationValue");
+  const stationName = document.getElementById("stationName");
+  const lineSelectContainer = document.getElementById("lineSelectContainer");
+  const directionContainer = document.getElementById("directionContainer");
+  const directionContainer2 = document.getElementById("direction-container");
+  const directionSelect = document.getElementById("directionSelect");
+  const directionArrow = document.getElementById("direction-arrow");
+  const directionValue = document.getElementById("direction-value");
+  const directionN = document.getElementById("direction-N");
+  const directionS = document.getElementById("direction-S");
+  const stationResult = document.getElementById("station-result");
+  const trainsResult = document.getElementById("trains-result");
+
+  let filteredStops = [];
+
+  let rotation = 0;
+
+  // --- Populate Line Dropdown ---
+  lines.forEach(line => {
+    const divOption = document.createElement('div');
+    divOption.className = 'customSelectOption';
+    divOption.id = 'lineSelectOption';
+    divOption.dataset.value = line.id;
+    const text = document.createElement('span');
+    text.textContent = `${line.name}`;
+    const icon = document.createElement("img");
+    lineSelectCustom.appendChild(divOption);
+    icon.src = "lineIcons/"+line.id+".svg";
+    divOption.appendChild(icon);
+    divOption.appendChild(text);
+
+    divOption.addEventListener('click', () => {
+      document.querySelectorAll('#lineSelectOption').forEach(el => el.classList.remove('selected'));
+      divOption.classList.add('selected');
+      lineValue.value = line.id;
+
+      const event = new Event('change', { bubbles: true });
+      lineValue.dispatchEvent(event);
+    });
+  });
+
+  lineValue.addEventListener("change", () => {
+    const selectedLine = lines.find(line => line.id === lineValue.value);
+    
+    lineSelectContainer.innerHTML = "";
+
+    if (selectedLine) {
+      // Filter stops within the line's route (start and end station included)
+      const startStop = selectedLine.direction_N;
+      const endStop = selectedLine.direction_S;
+
+      const lineID = selectedLine.id
+
+      filteredStops = stops.filter(stop => 
+        stop.lines.some(line => line.id === lineID)
+      );
+
+      stationResult.textContent = "";
+      trainsResult.textContent = "";
+      renderStationOptions();
+      placeholderStations.classList.add("hidden");
+      searchInput.classList.remove("hidden");
+      stationSelectCustom.classList.remove("hidden");
+      searchInput.value = "";
+      sendHeight();
+       
+    } else {
+      placeholderStations.classList.remove("hidden");
+      searchInput.classList.add("hidden");
+      stationSelectCustom.classList.add("hidden");
+      directionContainer2.classList.add("hidden");
+      sendHeight();
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    renderStationOptions(searchInput.value);
+  });
+
+  stationValue.addEventListener("change", () => {
+    console.log(stationValue.value);
+    if (stationValue.value) {
+      const selectedLine = lines.find(line => line.id === lineValue.value);
+      const selectedStop = stops.find(stop => stop.id === stationValue.value);
+
+      directionContainer2.classList.remove("hidden");
+
+      stationName.value = selectedStop.name;
+
+      lineSelectContainer.innerHTML = "";
+
+      if (selectedStop.lines) {
+        lineSelectContainer.classList.remove("hidden");
+
+        selectedStop.lines.forEach(line => {
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.name = "line-checkbox";
+          checkbox.classList.add("line-checkbox");
+          checkbox.value = line.id;
+          checkbox.id = `line-${line.id}`;
+          if(selectedStop.lines.length == 1){
+            checkbox.checked = true;
+            checkbox.disabled = true;
+          } 
+          else if(line.id == selectedLine.id) {
+            checkbox.checked = true;
+          }
+
+          checkbox.addEventListener('click', () => {
+            setStationResult();
+          });
+
+          const label = document.createElement("label");
+          label.htmlFor = checkbox.id;
+          const circle = document.createElement("span");
+          circle.classList.add("circle");
+          const icon = document.createElement("img");
+          icon.src = "lineIcons/"+line.id+".svg";
+
+          lineSelectContainer.appendChild(checkbox);
+          lineSelectContainer.appendChild(label);
+          label.appendChild(circle);
+          circle.appendChild(icon);
+        });
+      } else {
+        lineSelectContainer.classList.add("hidden");
+      }
+
+      directionSelect.innerHTML = "";
+      directionN.textContent = "";
+      directionS.textContent = "";
+      if (selectedStop.direction_N != "") {
+        const optionN = document.createElement("option");
+        optionN.value = "N";
+        optionN.textContent = selectedStop.direction_N;
+        directionN.textContent = selectedStop.direction_N;
+        directionSelect.appendChild(optionN);
+      }
+      else {
+        directionValue.value = "S";
+        setDirection(directionValue.value);
+      }
+      if (selectedStop.direction_S != "") {
+        const optionS = document.createElement("option");
+        optionS.value = "S";
+        optionS.textContent = selectedStop.direction_S;
+        directionS.textContent = selectedStop.direction_S;
+        directionSelect.appendChild(optionS);
+      }
+      else {
+        directionValue.value = "N";
+        setDirection(directionValue.value);
+      }
+
+      setStationResult();
+    } else {
+      directionContainer2.classList.remove("hidden");
+      sendHeight();
+    }
+  });
+
+  directionArrow.addEventListener("click", () => {
+    var direction = directionValue.value === "N" ? "S" : "N";
+    
+    if((direction === "N" && directionN.textContent != "") || (direction === "S" && directionS.textContent != "")) {
+      directionValue.value = directionValue.value === "N" ? "S" : "N";
+    }
+
+    setDirection(directionValue.value);
+
+    setStationResult();
+
+  });
+
+  function setDirection(direction) {
+    directionArrow.dataset.value = direction;
+
+    rotation += ((rotation % 360 == 0) && (direction == "S")) || ((rotation % 360 == 180) && (direction == "N")) ? 180 : 0;
+
+    directionArrow.style.transform = `rotate(${rotation}deg)`;
+
+    if(directionValue.value === "N") {
+      directionN.classList.add("option-focused");
+      directionS.classList.remove("option-focused");
+      return;
+    }
+    if(directionValue.value === "S") {
+      directionN.classList.remove("option-focused");
+      directionS.classList.add("option-focused");
+      return;
+    }
+  }
+
+  function getSelectedTrains(){
+    var checkedElements = document.querySelectorAll('.line-checkbox:checked');
+    var checkedTrains = [...checkedElements];
+    var trainsValues = [];
+    checkedTrains.forEach(train => {
+      trainsValues.push(train.value);
+    });
+    // alert(JSON.stringify(trainsValues));
+    return trainsValues;
+  }
+
+  function setStationResult(){
+    stationResult.textContent = "";
+    var stationText = stationName.value;
+    var directionText = (directionValue.value === "N" ? directionN.textContent : directionS.textContent)
+    const stationItalic = document.createElement("i");
+    stationItalic.textContent = stationText;
+    const towards = document.createElement("span");
+    towards.textContent = " towards ";
+    towards.style = "font-size: 0.9rem;";
+    const directionItalic = document.createElement("i");
+    directionItalic.textContent = directionText;
+    stationResult.appendChild(stationItalic);
+    stationResult.appendChild(towards);
+    stationResult.appendChild(directionItalic);
+
+    trainsResult.textContent = "";
+    var checkedTrains = getSelectedTrains();
+    const trainsLabel = document.createElement("span");
+    if(checkedTrains[0] != null) { 
+      if(checkedTrains.length > 1) {
+        trainsLabel.textContent = "Trains: ";
+      } else {
+        trainsLabel.textContent = "Train: ";
+      }
+    } else {
+      trainsLabel.textContent = "Select trains.";
+    }
+    trainsResult.appendChild(trainsLabel);
+    checkedTrains.forEach(train => {
+      const trainIcon = document.createElement("img");
+      trainIcon.src = "lineIcons/"+train+".svg";
+      trainsResult.appendChild(trainIcon);
+    });
+    // console.log(JSON.stringify(getSelectedTrains()));
+    sendHeight();
+    sendUpdate(stationValue.value, checkedTrains, directionValue.value);
+    // stationResult.textContent = "<i>" + stationName.value + "</i> towards <i>" + directionText + "</i>";
+  }
+
+  function renderStationOptions(filter = "") {
+    stationSelectCustom.innerHTML = "";
+    stationValue.removeAttribute("value");
+    filteredStops
+      .filter(s => s.name.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(s => {
+        var lines = "(";
+        s.lines.forEach(l => { 
+          lines = "" + lines + "" + l.id + "";
+        });
+
+        const divOption = document.createElement('div');
+        divOption.className = 'customSelectOption';
+        divOption.id = 'stationSelectOption';
+        divOption.textContent = s.name + ' '+ lines +')';
+        divOption.dataset.value = s.id;
+        stationSelectCustom.appendChild(divOption);
+
+        divOption.addEventListener('click', () => {
+          document.querySelectorAll('#stationSelectOption').forEach(el => el.classList.remove('selected'));
+          divOption.classList.add('selected');
+          stationValue.value = s.id;
+
+          const event = new Event('change', { bubbles: true });
+          stationValue.dispatchEvent(event);
+        });
+        
+      });
+  }
+}
+
+// Load data on page load
+loadData();
+</script>
+
+
+</body>
+</html>
