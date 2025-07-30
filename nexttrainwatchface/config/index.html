@@ -13,146 +13,482 @@
       }
   </style>
 
+  <link rel="stylesheet" href="resources/css/main.css">
+  <!-- <link rel="stylesheet" href="resources/css/watchface-preview-rect.css"> -->
+  <link rel="stylesheet" href="resources/css/watchface-preview-round.css">
+
   <style>
-
-    @font-face {
-        font-family: PFDinDisplayPro-Regular;
-        src: url("resources/PFDinDisplayPro-Regular.ttf");
-    }
-
-    @keyframes lineSeparatorAppears {
-      0% {
-        background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 100%, rgba(255, 85, 85, 1) 100%, rgba(255, 85, 85, 1) 100%, rgba(255, 170, 170, 1) 100%, rgba(255, 170, 170, 1) 100%);
-      }
-      100%{
-        background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 85, 85, 1) 50%, rgba(255, 85, 85, 1) 75%, rgba(255, 170, 170, 1) 75%, rgba(255, 170, 170, 1) 100%);
-      }
-    }
-
-    body { 
-      font-family: PFDinDisplayPro-Regular, PFDinDisplayProRegularWebfont, sans-serif;
-      color: white;
-      background-color: #333;
-      padding: 1rem .75rem .7rem;
-      margin: 0; 
-    }
-    h1 {
-      margin: 0;
-      margin-bottom: 0.5rem; 
-    }
-    .lineSeparator{
-      height: 1em;
-      width: 100%;
-      margin-bottom: 1em;
-      /* animation: 1s ease-in 0s 1 forwards running lineSeparatorAppears; */
-      background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 85, 85, 1) 50%, rgba(255, 85, 85, 1) 75%, rgba(255, 170, 170, 1) 75%, rgba(255, 170, 170, 1) 100%);
-    }
-    .section {
-      /* padding: 1em; */
-      background: #484848;
-      border-radius: .25rem;
-      box-shadow: #2f2f2f 0 .15rem .25rem;
-      padding-bottom: 1rem;
-    }
-    .sectionHeader {
-      background-color: #414141;
-      padding-bottom: .7rem;
-      padding-right: .75rem;
-      padding-left: .75rem;
-      position: relative;
-      margin-top: 1rem;
-      padding-top: .7rem;
-      border-radius: .25rem .25rem 0 0;
-    }
-    h3, h4, h5, h6 { 
-      margin: 0;
-      text-transform: uppercase;
-    }
-    .component {
-      padding: 0.5rem 0.5rem 0 0.5rem;
-      /* border-bottom: 1px #666 solid; */
-    }
-    .component::after {
-      content: "";
-      background: #666;
+    .color-value {
+      width: 2.2652rem;
+      height: 1.4rem;
+      border-radius: 0.7rem;
+      box-shadow: 0 0.1rem 0.1rem #2f2f2f;
       display: block;
-      position: relative;
-      margin-top: 0.5rem;
-      width: 100%;
-      height: 1px;
+      background: #000;
+    }
+
+    .picker-wrap {
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      position: fixed;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
       pointer-events: none;
     }
-    .component:last-child:after {
-      display: none;
+
+    .picker-wrap.show {
+      opacity: 1;
+      pointer-events: all;
     }
-    .component-inline {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.25rem 0;
-    }
-    iframe{
-      border: 0;
+
+    .picker {
       width: 100%;
-      overflow: hidden;
+      max-width: 26rem;
+      overflow: auto;
+      border-radius: 0.25rem;
     }
-    .label {
+
+    .color-box {
+      width: calc(100%/9);
+      aspect-ratio: 1;
+      display: block;
+    }
+
+    .color-box-container{
       display: flex;
-      /* width: 100%; */
-    }
-    .label-center {
-      justify-content: center;
-      margin-bottom: 0.25rem;
-    }
-    .component-inline .label {
-      max-width: 100%;
-    }
-    h6 {
-      color: #a4a4a4;
+      flex-wrap: wrap;
+      background: #484848;
+      padding: 1rem;
     }
 
-    /* select, input { margin: 5px 0; width: 300px; } */
-
-    button {
-      font-weight: 400;
-      font-family: PFDinDisplayPro-Regular,sans-serif;
-      font-size: 1rem;
-      line-height: 1.4rem;
-      text-transform: uppercase;
-      background-color: #767676;
-      border-radius: .25rem;
-      border: none;
-      display: inline-block;
-      color: #fff;
-      min-width: 12rem;
-      text-align: center;
-      margin: 1rem auto .7rem;
-      padding: .6rem;
-      -webkit-tap-highlight-color: #858585;
+    .color-box.selectable{
+      cursor: pointer;
     }
 
-    button:not(:disabled) {
-      background-color: #ff4700;
-      -webkit-tap-highlight-color: red;
+    .color-box.rounded-br {
+      border-bottom-right-radius: 0.25rem;
     }
 
-    button:not(:disabled):hover {
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.60);
+    .color-box.rounded-bl {
+      border-bottom-left-radius: 0.25rem;
     }
 
-    .hidden { display: none !important; }
+    .color-box.rounded-tr {
+      border-top-right-radius: 0.25rem;
+    }
+
+    .color-box.rounded-tl {
+      border-top-left-radius: 0.25rem;
+    }
+    
+    .color-box.selected {
+      transform: scale(1.1);
+      border-radius: 0.25rem;
+      box-shadow: #111 0 0 0.24rem;
+      position: relative;
+      z-index: 100;
+    }
   </style>
 </head>
 <body>
   <h1>Next Train Watchface</h1>
   <div class="lineSeparator"></div>
   <div class="section">
-    <div class="sectionHeader">
-      <h3>Select Station #1</h3>
+    <div class="section-header">
+      <h3>Style</h3>
+    </div>
+    <div class="component no-divider component-preview">
+      <div class="watchface-preview" id="square-color">
+        <div class="watchface-background" id="outer-background">
+          <div class="watchface-background-frame" id="frame">
+            <div class="watchface-background-inner" id="inner-background"></div>
+          </div>
+        </div>
+        <div class="watchface-radial">
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" id="watchface-radial-indicators">
+            <!-- <g class="watchface-radial-rect" id="train-indicator">
+              <rect 
+                class="watchface-radial-indicator"
+                id="train-indicator-1"
+                x="0"
+                y="38"
+                width="16"
+                height="16"
+              />
+              <rect 
+                class="watchface-radial-indicator"
+                id="train-indicator-2"
+                x="0"
+                y="114"
+                width="16"
+                height="16"
+              />
+              <rect 
+                class="watchface-radial-indicator"
+                id="train-indicator-3"
+                x="128"
+                y="114"
+                width="16"
+                height="16"
+              />
+            </g> -->
+            <g class="train-indicator-round" id="station-1-train-indicator" fill="red">
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-1"
+                cx="19"
+                cy="48"
+                r="8"
+              />
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-2"
+                cx="49"
+                cy="161"
+                r="8"
+              />
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-3"
+                cx="172"
+                cy="90"
+                r="8"
+              />
+            </g>
+            <g class="train-indicator-round" id="station-2-train-indicator" fill="red">
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-1"
+                cx="19"
+                cy="48"
+                r="8"
+              />
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-2"
+                cx="49"
+                cy="161"
+                r="8"
+              />
+              <circle 
+                class="watchface-radial-indicator"
+                id="train-indicator-3"
+                cx="172"
+                cy="90"
+                r="8"
+              />
+            </g>
+          </svg>
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" class="watchface-radial-rect" id="watchface-radial-3">
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-1-train-3"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-1-train-3"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linecap="round"
+            />
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-2-train-3"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-2-train-3"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linecap="round"
+            />
+          </svg>
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" class="watchface-radial-rect" id="watchface-radial-2">
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-1-train-2"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-1-train-2"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linejoin="round"
+            />
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-2-train-2"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-2-train-2"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" class="watchface-radial-rect" id="watchface-radial-1">
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-1-train-1"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-1-train-1"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linejoin="round"
+            />
+            <!-- <rect
+              class="watchface-radial-line"
+              id="station-2-train-1"
+              height="100%"
+              width="100%"
+              stroke-linejoin="round"
+            /> -->
+            <circle
+              class="watchface-radial-line"
+              id="station-2-train-1"
+              cx="50%"
+              cy="50%"
+              r="82px"
+              stroke-linejoin="round"
+            />
+          </svg>
+          
+        </div>
+        <div class="watchface-ticks" id="tick-marks"></div>
+        <div class="watchface-digital-clock" id="digital-clock">
+          10 09
+        </div>
+        <div class="watchface-analog-clock">
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50%" y1="50%" x2="74%" y2="31%" stroke="black" stroke-width="6" stroke-linecap="square" id="minute-hand"/>
+            <line x1="50%" y1="50%" x2="32%" y2="36%" stroke="red" stroke-width="6" stroke-linecap="square" id="hour-hand"/>
+          </svg>
+        </div>
+        <div class="watchface-top-icon">
+          <!-- <img src="resources/img/topIcons/icon-circle.png" id="station-1-top-icon"/> -->
+          <div id="station-1-top-icon"></div>
+          <div id="station-2-top-icon" style="display:none"></div>
+          <!-- <img src="resources/img/topIcons/icon-circle.png" id="station-2-top-icon" style="display:none"/> -->
+        </div>
+      </div>
+    </div>
+    <div class="component component-heading">
+      <h6>Background</h6>
+    </div>
+    <div class="component component-color">
+      <label id="outer-background-label">
+        <span class="label">Outer Background</span>
+        <span class="color-value" id="outer-background-color-value"></span>
+        <input type="hidden" id="outer-background-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="frame-label">
+        <span class="label">Frame</span>
+        <span class="color-value" id="frame-color-value"></span>
+        <input type="hidden" id="frame-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="inner-background-label">
+        <span class="label">Inner Background</span>
+        <span class="color-value" id="inner-background-color-value"></span>
+        <input type="hidden" id="inner-background-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-heading">
+      <h6>Digital clock</h6>
+    </div>
+    <div class="component component-toggle">
+      <label id="digital-clock-active-label">
+        <span class="label">Digital Clock</span>
+        <input type="checkbox" id="digital-clock-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="digital-clock-label">
+        <span class="label">Digital Clock Color</span>
+        <span class="color-value" id="digital-clock-color-value"></span>
+        <input type="hidden" id="digital-clock-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-heading">
+      <h6>Analog clock</h6>
+    </div>
+    <div class="component component-toggle">
+      <label id="analog-clock-active-label">
+        <span class="label">Analog Clock</span>
+        <input type="checkbox" id="analog-clock-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="hour-hand-label">
+        <span class="label">Hour Hand Color</span>
+        <span class="color-value" id="hour-hand-color-value"></span>
+        <input type="hidden" id="hour-hand-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="minute-hand-label">
+        <span class="label">Minute Hand Color</span>
+        <span class="color-value" id="minute-hand-color-value"></span>
+        <input type="hidden" id="minute-hand-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-heading">
+      <h6>Tick Marks</h6>
+    </div>
+    <div class="component component-toggle">
+      <label id="tick-marks-active-label">
+        <span class="label">Tick Marks</span>
+        <input type="checkbox" id="tick-marks-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="tick-marks-label">
+        <span class="label">Tick Marks Color</span>
+        <span class="color-value" id="tick-marks-color-value"></span>
+        <input type="hidden" id="tick-marks-color-input" value=""/>
+      </label>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <h3>Train Times</h3>
+    </div>
+    <div class="component component-toggle">
+      <label id="trains-function-active-label">
+        <span class="label">Train Times Function (NYC Subway - MTA)</span>
+        <input type="checkbox" id="trains-function-active"/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+      <span class="disclaimer">Privacy Disclaimer:<br>By checking this box, you acknowledge that the information such as stations, trains, and times you pick below will be sent to a private server.<br>However, please note that this information will not be stored.</span>
+    </div>
+  </div>
+  <div class="section" id="section-station-1">
+    <div class="section-header section-header-toggle">
+      <label id="station-1-active-label">
+        <h3>Select Station #1</h3>
+        <input type="checkbox" id="station-1-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
     </div>
     <iframe src="station-select.html" id="station1-iframe"></iframe>
     <input type="hidden" id="station1"/>
+    <div class="component component-heading">
+      <h6>Train display</h6>
+    </div>
+    <div class="component component-color">
+      <label id="station-1-train-1-label">
+        <span class="label">Train #1 Color</span>
+        <span class="color-value" id="station-1-train-1-color-value"></span>
+        <input type="hidden" id="station-1-train-1-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-1-train-2-label">
+        <span class="label">Train #2 Color</span>
+        <span class="color-value" id="station-1-train-2-color-value"></span>
+        <input type="hidden" id="station-1-train-2-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-1-train-3-label">
+        <span class="label">Train #3 Color</span>
+        <span class="color-value" id="station-1-train-3-color-value"></span>
+        <input type="hidden" id="station-1-train-3-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-toggle">
+      <label id="station-1-train-indicator-active-label">
+        <span class="label">Indicators</span>
+        <input type="checkbox" id="station-1-train-indicator-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-1-train-indicator-label">
+        <span class="label">Indicator Color</span>
+        <span class="color-value" id="station-1-train-indicator-color-value"></span>
+        <input type="hidden" id="station-1-train-indicator-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-heading">
+      <h6>When to show</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="station-1-show-radio">
+        <label>
+          <span class="label">
+            Time
+          </span>
+          <input type="radio" value="time" name="station-1-show" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            Distance
+          </span>
+          <input type="radio" value="distance" name="station-1-show">
+          <i></i>
+        </label>
+      </div>
+    </div>
+    <div class="component component-heading">
+      <h6>Time Active</h6>
+    </div>
     <div class="component">
       <div class="component-inline">
         <label for="s1-t1">Show from</label>
@@ -163,13 +499,176 @@
         <input type="time" id="s1-t2"/>
       </div>
     </div>
+    <div class="component component-heading">
+      <h6>Distance from station</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="station-1-distance-radio">
+        <label>
+          <span class="label">
+             100m/300ft
+          </span>
+          <input type="radio" value="100" name="station-1-distance" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            250m/800ft
+          </span>
+          <input type="radio" value="250" name="station-1-distance">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            500m/1600ft
+          </span>
+          <input type="radio" value="500" name="station-1-distance">
+          <i></i>
+        </label>
+      </div>
+    </div>
+    <div class="component component-heading">
+      <h6>Top Icon</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="icons-radio-1">
+        <label>
+          <span class="label">
+             None
+          </span>
+          <input type="radio" value="none" name="icons-1" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-home.png">
+          </span>
+          <input type="radio" value="icon-home" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-briefcase.png">
+          </span>
+          <input type="radio" value="icon-briefcase" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-school.png">
+          </span>
+          <input type="radio" value="icon-school" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-bank.png">
+          </span>
+          <input type="radio" value="icon-bank" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-heart.png">
+          </span>
+          <input type="radio" value="icon-heart" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-star.png">
+          </span>
+          <input type="radio" value="icon-star" name="icons-1">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-smile.png">
+          </span>
+          <input type="radio" value="icon-smile" name="icons-1">
+          <i></i>
+        </label>
+      </div>
+    </div>
   </div>
-  <div class="section">
-    <div class="sectionHeader">
-      <h3>Select Station #2</h3>
+  <div class="section" id="section-station-2">
+    <div class="section-header section-header-toggle">
+      <label id="station-2-active-label">
+        <h3>Select Station #2</h3>
+        <input type="checkbox" id="station-2-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
     </div>
     <iframe src="station-select.html" id="station2-iframe"></iframe>
     <input type="hidden" id="station2"/>
+    <div class="component component-heading">
+      <h6>Train display</h6>
+    </div>
+    <div class="component component-color">
+      <label id="station-2-train-1-label">
+        <span class="label">Train #1 Color</span>
+        <span class="color-value" id="station-2-train-1-color-value"></span>
+        <input type="hidden" id="station-2-train-1-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-2-train-2-label">
+        <span class="label">Train #2 Color</span>
+        <span class="color-value" id="station-2-train-2-color-value"></span>
+        <input type="hidden" id="station-2-train-2-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-2-train-3-label">
+        <span class="label">Train #3 Color</span>
+        <span class="color-value" id="station-2-train-3-color-value"></span>
+        <input type="hidden" id="station-2-train-3-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-toggle">
+      <label id="station-2-train-indicator-active-label">
+        <span class="label">Indicators</span>
+        <input type="checkbox" id="station-2-train-indicator-active" checked/>
+        <span class="graphic">
+          <span class="slide"></span>
+          <span class="marker"></span>
+        </span>
+      </label>
+    </div>
+    <div class="component component-color">
+      <label id="station-2-train-indicator-label">
+        <span class="label">Indicator Color</span>
+        <span class="color-value" id="station-2-train-indicator-color-value"></span>
+        <input type="hidden" id="station-2-train-indicator-color-input" value=""/>
+      </label>
+    </div>
+    <div class="component component-heading">
+      <h6>When to show</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="station-2-show-radio">
+        <label>
+          <span class="label">
+            Time
+          </span>
+          <input type="radio" value="time" name="station-2-show" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            Distance
+          </span>
+          <input type="radio" value="distance" name="station-2-show1">
+          <i></i>
+        </label>
+      </div>
+    </div>
+    <div class="component component-heading">
+      <h6>Time Active</h6>
+    </div>
     <div class="component">
       <div class="component-inline">
         <label for="s2-t1">Show from</label>
@@ -180,11 +679,776 @@
         <input type="time" id="s2-t2"/>
       </div>
     </div>
+    <div class="component component-heading">
+      <h6>Distance from station</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="station-2-distance-radio">
+        <label>
+          <span class="label">
+             100m/300ft
+          </span>
+          <input type="radio" value="100" name="station-2-distance" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            250m/800ft
+          </span>
+          <input type="radio" value="250" name="station-2-distance">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            500m/1600ft
+          </span>
+          <input type="radio" value="500" name="station-2-distance">
+          <i></i>
+        </label>
+      </div>
+    </div>
+    <div class="component component-heading">
+      <h6>Top Icon</h6>
+    </div>
+    <div class="component component-radio">
+      <div class="radio-group" id="icons-radio-2">
+        <label>
+          <span class="label">
+             None
+          </span>
+          <input type="radio" value="none" name="icons-2" checked>
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-home.png">
+          </span>
+          <input type="radio" value="icon-home" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-briefcase.png">
+          </span>
+          <input type="radio" value="icon-briefcase" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-school.png">
+          </span>
+          <input type="radio" value="icon-school" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-bank.png">
+          </span>
+          <input type="radio" value="icon-bank" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-heart.png">
+          </span>
+          <input type="radio" value="icon-heart" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-star.png">
+          </span>
+          <input type="radio" value="icon-star" name="icons-2">
+          <i></i>
+        </label>
+        <label>
+          <span class="label">
+            <img src="resources/img/topIcons/icon-smile.png">
+          </span>
+          <input type="radio" value="icon-smile" name="icons-2">
+          <i></i>
+        </label>
+      </div>
+    </div>
   </div>
   </div>
   <button id="submitBtn">Submit</button>
 
+  <div class="picker-wrap" id="color-picker">
+    <div class="picker">
+      <input type="hidden" id="picked-color-element"/>
+      <input type="hidden" id="picked-color-value"/>
+      <div class="color-box-container">
+        <i class="color-box rounded-tl rounded-tr rounded-bl rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-tl" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-tl" data-value="55ff00" style="background:#9ee594;"></i>
+        <i class="color-box selectable rounded-tr" data-value="aaff55" style="background:#c9eaa7;"></i>
+        <i class="color-box" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-tl" data-value="ffff55" style="background:#fff1b5;"></i>
+        <i class="color-box selectable rounded-tr" data-value="ffffaa" style="background:#fff6d3;"></i>
+        <i class="color-box rounded-tr" style="background:transparent;"></i>
+        <i class="color-box rounded-tl rounded-tr rounded-bl rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-tl" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-tl" data-value="aaffaa" style="background:#c7f0c8;"></i>
+        <i class="color-box selectable" data-value="55ff55" style="background:#9de7a0;"></i>
+        <i class="color-box selectable" data-value="00ff00" style="background:#8ee391;"></i>
+        <i class="color-box selectable" data-value="aaff00" style="background:#c9e89d;"></i>
+        <i class="color-box selectable" data-value="ffff00" style="background:#ffeeab;"></i>
+        <i class="color-box selectable" data-value="ffaa55" style="background:#f1ad93;"></i>
+        <i class="color-box selectable rounded-tr" data-value="ffaaaa" style="background:#efb5b8;"></i>
+        <i class="color-box rounded-tr" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-tl" data-value="55ffaa" style="background:#9becc2;"></i>
+        <i class="color-box selectable" data-value="00ff55" style="background:#8ee69e;"></i>
+        <i class="color-box selectable" data-value="00aa00" style="background:#5e9860;"></i>
+        <i class="color-box selectable" data-value="55aa00" style="background:#759a64;"></i>
+        <i class="color-box selectable" data-value="aaaa55" style="background:#aea382;"></i>
+        <i class="color-box selectable" data-value="aaaa00" style="background:#afa072;"></i>
+        <i class="color-box selectable" data-value="ffaa00" style="background:#f1aa86;"></i>
+        <i class="color-box selectable" data-value="ff5500" style="background:#e66e6b;"></i>
+        <i class="color-box selectable rounded-tr" data-value="ff5555" style="background:#e6727c;"></i>
+        <i class="color-box selectable rounded-bl" data-value="aaffff" style="background:#c3f9f7;"></i>
+        <i class="color-box selectable" data-value="00ffaa" style="background:#8aebc0;"></i>
+        <i class="color-box selectable" data-value="00aa55" style="background:#5c9b72;"></i>
+        <i class="color-box selectable" data-value="55aa55" style="background:#759d76;"></i>
+        <i class="color-box selectable" data-value="005500" style="background:#2b4a2c;"></i>
+        <i class="color-box selectable" data-value="555500" style="background:#564e36;"></i>
+        <i class="color-box selectable" data-value="aa5500" style="background:#9d5b4d;"></i>
+        <i class="color-box selectable" data-value="ff0000" style="background:#e35462;"></i>
+        <i class="color-box selectable rounded-br" data-value="ff0055" style="background:#e25874;"></i>
+        <i class="color-box" style="background:transparent;"></i>
+        <i class="color-box selectable" data-value="55aaaa" style="background:#71a6a4;"></i>
+        <i class="color-box selectable" data-value="00aaaa" style="background:#57a5a2;"></i>
+        <i class="color-box selectable" data-value="005555" style="background:#27514f;"></i>
+        <i class="color-box selectable" data-value="ffffff" style="background:#ffffff;"></i>
+        <i class="color-box selectable" data-value="0000000" style="background:#000000;"></i>
+        <i class="color-box selectable" data-value="aa5555" style="background:#9d6064;"></i>
+        <i class="color-box selectable" data-value="aa0000" style="background:#99353f;"></i>
+        <i class="color-box" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-tl" data-value="55ffff" style="background:#95f6f2;"></i>
+        <i class="color-box selectable" data-value="00ffff" style="background:#84f5f1;"></i>
+        <i class="color-box selectable" data-value="00aaff" style="background:#4cb4db;"></i>
+        <i class="color-box selectable" data-value="0055aa" style="background:#16638d;"></i>
+        <i class="color-box selectable" data-value="aaaaaa" style="background:#ababab;"></i>
+        <i class="color-box selectable" data-value="555555" style="background:#545454;"></i>
+        <i class="color-box selectable" data-value="550000" style="background:#4a161b;"></i>
+        <i class="color-box selectable" data-value="aa0055" style="background:#983e5a;"></i>
+        <i class="color-box selectable rounded-tr" data-value="ff55aa" style="background:#e37fa7;"></i>
+        <i class="color-box selectable rounded-bl" data-value="55aaff" style="background:#69b5dd;"></i>
+        <i class="color-box selectable" data-value="0055ff" style="background:#007dce;"></i>
+        <i class="color-box selectable" data-value="0000ff" style="background:#0068ca;"></i>
+        <i class="color-box selectable" data-value="0000aa" style="background:#004387;"></i>
+        <i class="color-box selectable" data-value="000055" style="background:#001e41;"></i>
+        <i class="color-box selectable" data-value="550055" style="background:#482748;"></i>
+        <i class="color-box selectable" data-value="aa00aa" style="background:#955694;"></i>
+        <i class="color-box selectable" data-value="ff00aa" style="background:#e16aa3;"></i>
+        <i class="color-box selectable rounded-br" data-value="ffaaff" style="background:#ecc3eb;"></i>
+        <i class="color-box rounded-bl" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-bl" data-value="5555aa" style="background:#4f6790;"></i>
+        <i class="color-box selectable" data-value="5555ff" style="background:#4180d0;"></i>
+        <i class="color-box selectable" data-value="5500ff" style="background:#2f6bcc;"></i>
+        <i class="color-box selectable" data-value="5500aa" style="background:#40488a;"></i>
+        <i class="color-box selectable" data-value="aa00ff" style="background:#8f74d2;"></i>
+        <i class="color-box selectable" data-value="ff00ff" style="background:#de83dc;"></i>
+        <i class="color-box selectable rounded-br" data-value="ff55ff" style="background:#e194df;"></i>
+        <i class="color-box rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-tl rounded-tr rounded-bl rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-bl rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-bl" style="background:transparent;"></i>
+        <i class="color-box selectable rounded-bl" data-value="aaaaff" style="background:#a7bae2;"></i>
+        <i class="color-box selectable" data-value="aa55ff" style="background:#9587d5;"></i>
+        <i class="color-box selectable rounded-br" data-value="aa55aa" style="background:#9a7099;"></i>
+        <i class="color-box rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-bl rounded-br" style="background:transparent;"></i>
+        <i class="color-box rounded-tl rounded-tr rounded-bl rounded-br" style="background:transparent;"></i>
+      </div>
+    </div>
+  </div>
+
 <script>
+
+  // const iconsRadioGroup1 = document.getElementById('icons-radio-1');
+  // const iconsRadioGroup2 = document.getElementById('icons-radio-2');
+
+  // iconsRadioGroup1.addEventListener('change', (event) => {
+  //   if (event.target.name === 'icons-1') {
+  //     console.log('Selected value:', event.target.value);
+  //     topIcon.src = "resources/img/topIcons/"+ event.target.value +".png";
+  //   }
+  // });
+  // iconsRadioGroup2.addEventListener('change', (event) => {
+  //   if (event.target.name === 'icons-2') {
+  //     console.log('Selected value:', event.target.value);
+  //     topIcon.src = "resources/img/topIcons/"+ event.target.value +".png";
+  //   }
+  // });
+
+  var data = [
+    {
+      id: "outer-background",
+      type: "color",
+      default: "555555",
+      value: null,
+    },
+    {
+      id: "frame",
+      type: "color",
+      default: "AAAAAA",
+      value: null,
+    },
+    {
+      id: "inner-background",
+      type: "color",
+      default: "555555",
+      value: null,
+    },
+    {
+      id: "digital-clock-active",
+      type: "toggle",
+      default: "true",
+      value: null,
+    },
+    {
+      id: "digital-clock",
+      type: "color",
+      default: "ffffff",
+      value: null,
+    },
+    {
+      id: "analog-clock-active",
+      type: "toggle",
+      default: "true",
+      value: null,
+    },
+    {
+      id: "hour-hand",
+      type: "color",
+      default: "ff0000",
+      value: null,
+    },
+    {
+      id: "minute-hand",
+      type: "color",
+      default: "000000",
+      value: null,
+    },
+    {
+      id: "train-1",
+      type: "color",
+      default: "ff0000",
+      value: null,
+    },
+    {
+      id: "train-2",
+      type: "color",
+      default: "ff5555",
+      value: null,
+    },
+    {
+      id: "train-3",
+      type: "color",
+      default: "ffaaaa",
+      value: null,
+    },
+    {
+      id: "tick-marks-active",
+      type: "toggle",
+      default: "true",
+      value: null,
+    },
+    {
+      id: "tick-marks",
+      type: "color",
+      default: "ffffff",
+      value: null,
+    },
+    {
+      id: "trains-function-active",
+      type: "toggle",
+      default: false,
+      value: null,
+    },
+    {
+      id: "station-1",
+      type: "station",
+      default: "",
+      value: null,
+    },
+    {
+      id: "trains-1",
+      type: "trains",
+      default: "",
+      value: null,
+    },
+    {
+      id: "time-interval-1",
+      type: "time-interval",
+      default: "",
+      value: null,
+    },
+    {
+      id: "icon-1",
+      type: "icon",
+      default: "",
+      value: null,
+    },
+    {
+      id: "station-1-train-indicator-active",
+      type: "toggle",
+      default: true,
+      value: null,
+    },
+    {
+      id: "station-1-train-indicator",
+      type: "color",
+      default: "000000",
+      value: null,
+    },
+    {
+      id: "station-2",
+      type: "station",
+      default: "",
+      value: null,
+    },
+    {
+      id: "trains-2",
+      type: "trains",
+      default: "",
+      value: null,
+    },
+    {
+      id: "time-interval-2",
+      type: "time-interval",
+      default: "",
+      value: null,
+    },
+    {
+      id: "icon-2",
+      type: "icon",
+      default: "",
+      value: null,
+    },
+    {
+      id: "station-2-train-indicator-active",
+      type: "toggle",
+      default: true,
+      value: null,
+    },
+    {
+      id: "station-2-train-indicator",
+      type: "color",
+      default: "000000",
+      value: null,
+    }
+  ];
+
+  const toggles = [
+    {
+      id: "digital-clock-active",
+      dependents: ["digital-clock-label"],
+      previewDependents: ["digital-clock"],
+    },
+    {
+      id: "analog-clock-active",
+      dependents: ["hour-hand-label", "minute-hand-label"],
+      previewDependents: ["hour-hand", "minute-hand"]
+    },
+    {
+      id: "tick-marks-active",
+      dependents: ["tick-marks-label"],
+      previewDependents: ["tick-marks-label"],
+    },
+    // {
+    //   id: "trains-function-active",
+    //   dependents: ["section-station-1", "section-station-2"],
+    //   previewDependents: ["section-station-1", "section-station-2"],
+    // },
+    {
+      id: "station-1-active",
+      dependents: ["section-station-1"],
+      previewDependents: ["section-station-1"],
+    },
+    {
+      id: "station-2-active",
+      dependents: ["section-station-2"],
+      previewDependents: ["section-station-2"]
+    },
+    {
+      id: "station-1-train-indicator-active",
+      dependents: ["station-1-train-indicator-label"],
+      previewDependents: ["station-1-train-indicator"],
+    },
+    {
+      id: "station-2-train-indicator-active",
+      dependents: ["station-2-train-indicator-label"],
+      previewDependents: ["station-2-train-indicator"]
+    }
+  ];
+
+  toggles.forEach(toggle => {
+    const toggleInput = document.getElementById(toggle.id);
+    toggleInput.addEventListener("change", (event) => {
+      console.log(event.target.checked);
+        toggle.dependents.forEach(dependent => {
+        const dependentElement = document.getElementById(dependent);
+        if(!event.target.checked) {
+          dependentElement.classList.add("disabled");
+          dependentElement.disabled = true;
+        } else {
+          dependentElement.classList.remove("disabled");
+          dependentElement.disabled = false;
+        }
+      });
+    });
+  });
+
+
+  // COLOR INPUTS
+
+  const colorInputs = [
+    {
+      id: "outer-background",
+      default: "555555",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "background-color",
+      spanElement: null
+    },
+    {
+      id: "frame",
+      default: "AAAAAA",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "background-color",
+      spanElement: null
+    },
+    {
+      id: "inner-background",
+      default: "555555",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "background-color",
+      spanElement: null
+    },
+    {
+      id: "digital-clock",
+      default: "ffffff",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "color",
+      spanElement: null
+    },
+    {
+      id: "hour-hand",
+      default: "ff0000",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "minute-hand",
+      default: "000000",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-1-train-1",
+      default: "ff0000",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-1-train-2",
+      default: "ff5555",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-1-train-3",
+      default: "ffaaaa",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-2-train-1",
+      default: "0000aa",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-2-train-2",
+      default: "0000ff",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "station-2-train-3",
+      default: "55aaff",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "stroke",
+      spanElement: null
+    },
+    {
+      id: "tick-marks",
+      default: "ffffff",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "background-color",
+      spanElement: null
+    },
+    {
+      id: "station-1-train-indicator",
+      default: "000000",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "fill",
+      spanElement: null
+    },
+    {
+      id: "station-2-train-indicator",
+      default: "aaaaaa",
+      value: null,
+      valueSunlight: null,
+      labelElement: null,
+      inputElement: null,
+      previewElement: null,
+      previewType: "fill",
+      spanElement: null
+    },
+  ];
+
+  let palette = [];
+
+  fetch('data/pebble-palette.json')
+  .then(response => response.json())
+  .then(data => {
+    palette = data;
+
+    setupColorPicker();
+  });
+
+  function convertToSunlight(hex) {
+    const entry = palette.find(color => color.uncorrected.toLowerCase() === hex.toLowerCase());
+    return entry ? entry.sunlight : "000000";
+  }
+
+  function setColorValueForInput(inputID, hex){
+    const currentInput = colorInputs.find(colorInput => inputID === colorInput.id);
+    currentInput.value = hex;
+    currentInput.valueSunlight = convertToSunlight(hex);
+    console.log(currentInput.valueSunlight);
+    currentInput.spanElement.style.background = '#' + currentInput.valueSunlight;
+    switch (currentInput.previewType) {
+      case "background-color":
+        currentInput.previewElement.style.backgroundColor = '#' + currentInput.valueSunlight;
+        break;
+      case "stroke":
+        currentInput.previewElement.style.stroke = '#' + currentInput.valueSunlight;
+        break;
+      case "color":
+        currentInput.previewElement.style.color = '#' + currentInput.valueSunlight;
+        break;
+      case "fill":
+        currentInput.previewElement.style.fill = '#' + currentInput.valueSunlight;
+        break;
+      default:
+        break;
+    }
+    currentInput.inputElement.value = hex;
+    currentInput.inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+    console.log("updated " + colorInputs.find(colorInput => inputID === colorInput.id).value);
+  }
+
+  function setupColorPicker(){
+    const colorPicker = document.getElementById('color-picker');
+    const pickedColor = document.getElementById('picked-color-value');
+    const pickedElement = document.getElementById('picked-color-element');
+
+    var currentPickerTarget = null;
+
+    // colorPicker.addEventListener('click', function() {
+    //   colorPicker.classList.remove('show');
+    // });
+
+    const colorBoxes = document.querySelectorAll(".color-box.selectable");
+    
+    colorBoxes.forEach(colorBox => {
+      colorBox.addEventListener('click', function() {
+
+        pickedColor.value = colorBox.dataset.value;
+
+        setColorValueForInput(currentPickerTarget, colorBox.dataset.value);
+
+        const selectedColorBoxes = document.querySelectorAll(".color-box.selected");
+
+        selectedColorBoxes.forEach(sCB => {
+          sCB.classList.remove("selected");
+        });
+        colorBox.classList.add('selected');
+
+        setTimeout(function(){
+          colorPicker.classList.remove('show');
+        }, 300);
+      });
+    });
+
+    colorInputs.forEach(colorInput => {
+      colorInput.labelElement = document.getElementById(colorInput.id + '-label');
+      colorInput.spanElement = document.getElementById(colorInput.id + '-color-value');
+      colorInput.inputElement = document.getElementById(colorInput.id + '-color-input');
+      colorInput.previewElement = document.getElementById(colorInput.id);
+
+      colorInput.value = colorInput.default;
+
+      colorInput.valueSunlight = convertToSunlight(colorInput.value);
+
+      if(!colorInput.valueSunlight){
+        console.error("Error getting sunlight color for " + colorInput.id + " hex #" + colorInput.value);
+      }
+
+      colorInput.spanElement.style.background = '#' + colorInput.valueSunlight;
+
+      switch (colorInput.previewType) {
+        case "background-color":
+          colorInput.previewElement.style.backgroundColor = '#' + colorInput.valueSunlight;
+          break;
+        case "stroke":
+          colorInput.previewElement.style.stroke = '#' + colorInput.valueSunlight;
+          break;
+        case "color":
+          colorInput.previewElement.style.color = '#' + colorInput.valueSunlight;
+          break;
+        case "fill":
+          colorInput.previewElement.style.fill = '#' + colorInput.valueSunlight;
+          break;
+        default:
+          break;
+      }
+
+      colorInput.inputElement.value = colorInput.value;
+
+      colorInput.labelElement.addEventListener('click', function() {
+        if(!colorInput.labelElement.disabled) {
+          colorPicker.classList.add('show');
+          currentPickerTarget = colorInput.id;
+
+          const selectedColorBoxes = document.querySelectorAll(".color-box.selected");
+
+          selectedColorBoxes.forEach(sCB => {
+            sCB.classList.remove("selected");
+          });
+          const selectedColorBox = [...colorBoxes].find(colorBox => colorBox.dataset.value === colorInput.value);
+          if(selectedColorBox) {
+            selectedColorBox.classList.add('selected');
+          }
+        }
+      });
+
+    });
+
+  }
+
+  const stationsSections = [
+      document.getElementById('section-station-1'),
+      document.getElementById('section-station-2')
+    ];
+    
+  const stationsSection1 = document.getElementById('section-station-1');
+  const stationsSection2 = document.getElementById('section-station-2');
+
+  const trainPreviewEl = [
+    [document.getElementById('station-1-top-icon'), document.getElementById('station-1-train-indicator'), document.getElementById('station-1-train-1'), document.getElementById('station-1-train-2'), document.getElementById('station-1-train-3')],
+    [document.getElementById('station-2-top-icon'), document.getElementById('station-2-train-indicator'), document.getElementById('station-2-train-1'), document.getElementById('station-2-train-2'), document.getElementById('station-2-train-3')],
+  ];
+
+  const topIcon1 = document.getElementById("station-1-top-icon");
+  const topIcon2 = document.getElementById("station-2-top-icon");
+
+  window.addEventListener('load', function() {
+    stationsSections.forEach((section, index) => {
+      section.addEventListener('change', (event) => {
+        // if (index === 0) {
+          trainPreviewEl[index].forEach(r => {
+            r.style.display = "unset";
+          });
+          trainPreviewEl[(index+1)%2].forEach(r => {
+            r.style.display = "none";
+          });
+
+          if (event.target.name === 'icons-1') {
+            console.log('Selected value:', event.target.value);
+            topIcon1.style.maskImage = "url(resources/img/topIcons/"+ event.target.value +".png)";
+            // topIcon1.src = "resources/img/topIcons/"+ event.target.value +".png";
+          }
+
+          if (event.target.name === 'icons-2') {
+            console.log('Selected value:', event.target.value);
+            topIcon2.style.maskImage = "url(resources/img/topIcons/"+ event.target.value +".png)"
+            // topIcon2.src = "resources/img/topIcons/"+ event.target.value +".png";
+          }
+
+        // }
+      });
+    });
+  });
+
+  // TRAIN SELECTION IFRAMES
+
   const iframes = [
     document.getElementById('station1-iframe'),
     document.getElementById('station2-iframe')
@@ -225,6 +1489,8 @@
       }
     }
   });
+
+  // SUBMIT CONFIG
 
   function toMinutes(timeStr) {
     const [h, m] = timeStr.split(':').map(Number);

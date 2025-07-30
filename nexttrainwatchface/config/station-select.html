@@ -8,7 +8,7 @@
 
     @font-face {
         font-family: PFDinDisplayPro-Regular;
-        src: url("resources/PFDinDisplayPro-Regular.ttf");
+        src: url("resources/fonts/PFDinDisplayPro-Regular.ttf");
     }
     
     body { 
@@ -309,8 +309,8 @@ async function fetchCSV(url) {
 }
 
 async function loadData() {
-  const rawLines = await fetchCSV("lines.csv");
-  const rawStops = await fetchCSV("stations.csv");
+  const rawLines = await fetchCSV("data/lines.csv");
+  const rawStops = await fetchCSV("data/stations.csv");
 
   // Convert CSV to objects
   const lines = rawLines.map(row => ({
@@ -365,7 +365,7 @@ function initializeDropdown(lines, stops) {
     text.textContent = `${line.name}`;
     const icon = document.createElement("img");
     lineSelectCustom.appendChild(divOption);
-    icon.src = "lineIcons/"+line.id+".svg";
+    icon.src = "resources/img/lineIcons/"+line.id+".svg";
     divOption.appendChild(icon);
     divOption.appendChild(text);
 
@@ -456,7 +456,7 @@ function initializeDropdown(lines, stops) {
           const circle = document.createElement("span");
           circle.classList.add("circle");
           const icon = document.createElement("img");
-          icon.src = "lineIcons/"+line.id+".svg";
+          icon.src = "resources/img/lineIcons/"+line.id+".svg";
 
           lineSelectContainer.appendChild(checkbox);
           lineSelectContainer.appendChild(label);
@@ -573,13 +573,12 @@ function initializeDropdown(lines, stops) {
     trainsResult.appendChild(trainsLabel);
     checkedTrains.forEach(train => {
       const trainIcon = document.createElement("img");
-      trainIcon.src = "lineIcons/"+train+".svg";
+      trainIcon.src = "resources/img/lineIcons/"+train+".svg";
       trainsResult.appendChild(trainIcon);
     });
-    // console.log(JSON.stringify(getSelectedTrains()));
+
     sendHeight();
     sendUpdate(stationValue.value, checkedTrains, directionValue.value);
-    // stationResult.textContent = "<i>" + stationName.value + "</i> towards <i>" + directionText + "</i>";
   }
 
   function renderStationOptions(filter = "") {
