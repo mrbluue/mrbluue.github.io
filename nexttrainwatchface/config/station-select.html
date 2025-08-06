@@ -220,9 +220,10 @@
     #trains-result {
       display: flex;
       align-items: center;
+      min-height: 24px;
     }
 
-    #trains-result span:first-child {
+    #trains-result span {
       margin-right: 0.5rem;
     }
 
@@ -401,16 +402,14 @@ function initializeDropdown(lines, stops) {
       placeholderStations.classList.add("hidden");
       searchInput.classList.remove("hidden");
       stationSelectCustom.classList.remove("hidden");
-      searchInput.value = "";
-      sendHeight();
-       
+      searchInput.value = "";       
     } else {
       placeholderStations.classList.remove("hidden");
       searchInput.classList.add("hidden");
       stationSelectCustom.classList.add("hidden");
       directionContainer2.classList.add("hidden");
-      sendHeight();
     }
+    sendHeight();
   });
 
   searchInput.addEventListener("input", () => {

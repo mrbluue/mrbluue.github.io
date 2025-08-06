@@ -1,258 +1,258 @@
 [
   {
-    "uncorrected": "000000",
-    "sunlight": "000000"
+    "uncorrected": "#000000",
+    "sunlight": "#000000"
   },
   {
-    "uncorrected": "000055",
-    "sunlight": "001e41"
+    "uncorrected": "#000055",
+    "sunlight": "#001e41"
   },
   {
-    "uncorrected": "0000aa",
-    "sunlight": "004387"
+    "uncorrected": "#0000aa",
+    "sunlight": "#004387"
   },
   {
-    "uncorrected": "0000ff",
-    "sunlight": "0068ca"
+    "uncorrected": "#0000ff",
+    "sunlight": "#0068ca"
   },
   {
-    "uncorrected": "005500",
-    "sunlight": "2b4a2c"
+    "uncorrected": "#005500",
+    "sunlight": "#2b4a2c"
   },
   {
-    "uncorrected": "005555",
-    "sunlight": "27514f"
+    "uncorrected": "#005555",
+    "sunlight": "#27514f"
   },
   {
-    "uncorrected": "0055aa",
-    "sunlight": "16638d"
+    "uncorrected": "#0055aa",
+    "sunlight": "#16638d"
   },
   {
-    "uncorrected": "0055ff",
-    "sunlight": "007dce"
+    "uncorrected": "#0055ff",
+    "sunlight": "#007dce"
   },
   {
-    "uncorrected": "00aa00",
-    "sunlight": "5e9860"
+    "uncorrected": "#00aa00",
+    "sunlight": "#5e9860"
   },
   {
-    "uncorrected": "00aa55",
-    "sunlight": "5c9b72"
+    "uncorrected": "#00aa55",
+    "sunlight": "#5c9b72"
   },
   {
-    "uncorrected": "00aaaa",
-    "sunlight": "57a5a2"
+    "uncorrected": "#00aaaa",
+    "sunlight": "#57a5a2"
   },
   {
-    "uncorrected": "00aaff",
-    "sunlight": "4cb4db"
+    "uncorrected": "#00aaff",
+    "sunlight": "#4cb4db"
   },
   {
-    "uncorrected": "00ff00",
-    "sunlight": "8ee391"
+    "uncorrected": "#00ff00",
+    "sunlight": "#8ee391"
   },
   {
-    "uncorrected": "00ff55",
-    "sunlight": "8ee69e"
+    "uncorrected": "#00ff55",
+    "sunlight": "#8ee69e"
   },
   {
-    "uncorrected": "00ffaa",
-    "sunlight": "8aebc0"
+    "uncorrected": "#00ffaa",
+    "sunlight": "#8aebc0"
   },
   {
-    "uncorrected": "00ffff",
-    "sunlight": "84f5f1"
+    "uncorrected": "#00ffff",
+    "sunlight": "#84f5f1"
   },
   {
-    "uncorrected": "550000",
-    "sunlight": "4a161b"
+    "uncorrected": "#550000",
+    "sunlight": "#4a161b"
   },
   {
-    "uncorrected": "550055",
-    "sunlight": "482748"
+    "uncorrected": "#550055",
+    "sunlight": "#482748"
   },
   {
-    "uncorrected": "5500aa",
-    "sunlight": "40488a"
+    "uncorrected": "#5500aa",
+    "sunlight": "#40488a"
   },
   {
-    "uncorrected": "5500ff",
-    "sunlight": "2f6bcc"
+    "uncorrected": "#5500ff",
+    "sunlight": "#2f6bcc"
   },
   {
-    "uncorrected": "555500",
-    "sunlight": "564e36"
+    "uncorrected": "#555500",
+    "sunlight": "#564e36"
   },
   {
-    "uncorrected": "5555aa",
-    "sunlight": "4f6790"
+    "uncorrected": "#5555aa",
+    "sunlight": "#4f6790"
   },
   {
-    "uncorrected": "5555ff",
-    "sunlight": "4180d0"
+    "uncorrected": "#5555ff",
+    "sunlight": "#4180d0"
   },
   {
-    "uncorrected": "55aa00",
-    "sunlight": "759a64"
+    "uncorrected": "#55aa00",
+    "sunlight": "#759a64"
   },
   {
-    "uncorrected": "55aa55",
-    "sunlight": "759d76"
+    "uncorrected": "#55aa55",
+    "sunlight": "#759d76"
   },
   {
-    "uncorrected": "55aaaa",
-    "sunlight": "71a6a4"
+    "uncorrected": "#55aaaa",
+    "sunlight": "#71a6a4"
   },
   {
-    "uncorrected": "55aaff",
-    "sunlight": "69b5dd"
+    "uncorrected": "#55aaff",
+    "sunlight": "#69b5dd"
   },
   {
-    "uncorrected": "55ff00",
-    "sunlight": "9ee594"
+    "uncorrected": "#55ff00",
+    "sunlight": "#9ee594"
   },
   {
-    "uncorrected": "55ff55",
-    "sunlight": "9de7a0"
+    "uncorrected": "#55ff55",
+    "sunlight": "#9de7a0"
   },
   {
-    "uncorrected": "55ffaa",
-    "sunlight": "9becc2"
+    "uncorrected": "#55ffaa",
+    "sunlight": "#9becc2"
   },
   {
-    "uncorrected": "55ffff",
-    "sunlight": "95f6f2"
+    "uncorrected": "#55ffff",
+    "sunlight": "#95f6f2"
   },
   {
-    "uncorrected": "aa0000",
-    "sunlight": "99353f"
+    "uncorrected": "#aa0000",
+    "sunlight": "#99353f"
   },
   {
-    "uncorrected": "aa0055",
-    "sunlight": "983e5a"
+    "uncorrected": "#aa0055",
+    "sunlight": "#983e5a"
   },
   {
-    "uncorrected": "aa00aa",
-    "sunlight": "955694"
+    "uncorrected": "#aa00aa",
+    "sunlight": "#955694"
   },
   {
-    "uncorrected": "aa00ff",
-    "sunlight": "8f74d2"
+    "uncorrected": "#aa00ff",
+    "sunlight": "#8f74d2"
   },
   {
-    "uncorrected": "aa5500",
-    "sunlight": "9d5b4d"
+    "uncorrected": "#aa5500",
+    "sunlight": "#9d5b4d"
   },
   {
-    "uncorrected": "aa5555",
-    "sunlight": "9d6064"
+    "uncorrected": "#aa5555",
+    "sunlight": "#9d6064"
   },
   {
-    "uncorrected": "aa55aa",
-    "sunlight": "9a7099"
+    "uncorrected": "#aa55aa",
+    "sunlight": "#9a7099"
   },
   {
-    "uncorrected": "aa55ff",
-    "sunlight": "9587d5"
+    "uncorrected": "#aa55ff",
+    "sunlight": "#9587d5"
   },
   {
-    "uncorrected": "aaaa00",
-    "sunlight": "afa072"
+    "uncorrected": "#aaaa00",
+    "sunlight": "#afa072"
   },
   {
-    "uncorrected": "aaaa55",
-    "sunlight": "aea382"
+    "uncorrected": "#aaaa55",
+    "sunlight": "#aea382"
   },
   {
-    "uncorrected": "ffffff",
-    "sunlight": "ffffff"
+    "uncorrected": "#ffffff",
+    "sunlight": "#ffffff"
   },
   {
-    "uncorrected": "aaaaff",
-    "sunlight": "a7bae2"
+    "uncorrected": "#aaaaff",
+    "sunlight": "#a7bae2"
   },
   {
-    "uncorrected": "aaff00",
-    "sunlight": "c9e89d"
+    "uncorrected": "#aaff00",
+    "sunlight": "#c9e89d"
   },
   {
-    "uncorrected": "aaff55",
-    "sunlight": "c9eaa7"
+    "uncorrected": "#aaff55",
+    "sunlight": "#c9eaa7"
   },
   {
-    "uncorrected": "aaffaa",
-    "sunlight": "c7f0c8"
+    "uncorrected": "#aaffaa",
+    "sunlight": "#c7f0c8"
   },
   {
-    "uncorrected": "aaffff",
-    "sunlight": "c3f9f7"
+    "uncorrected": "#aaffff",
+    "sunlight": "#c3f9f7"
   },
   {
-    "uncorrected": "ff0055",
-    "sunlight": "e25874"
+    "uncorrected": "#ff0055",
+    "sunlight": "#e25874"
   },
   {
-    "uncorrected": "ff00aa",
-    "sunlight": "e16aa3"
+    "uncorrected": "#ff00aa",
+    "sunlight": "#e16aa3"
   },
   {
-    "uncorrected": "ff00ff",
-    "sunlight": "de83dc"
+    "uncorrected": "#ff00ff",
+    "sunlight": "#de83dc"
   },
   {
-    "uncorrected": "ff5500",
-    "sunlight": "e66e6b"
+    "uncorrected": "#ff5500",
+    "sunlight": "#e66e6b"
   },
   {
-    "uncorrected": "ff5555",
-    "sunlight": "e6727c"
+    "uncorrected": "#ff5555",
+    "sunlight": "#e6727c"
   },
   {
-    "uncorrected": "ff55aa",
-    "sunlight": "e37fa7"
+    "uncorrected": "#ff55aa",
+    "sunlight": "#e37fa7"
   },
   {
-    "uncorrected": "ff55ff",
-    "sunlight": "e194df"
+    "uncorrected": "#ff55ff",
+    "sunlight": "#e194df"
   },
   {
-    "uncorrected": "ffaaaa",
-    "sunlight": "efb5b8"
+    "uncorrected": "#ffaaaa",
+    "sunlight": "#efb5b8"
   },
   {
-    "uncorrected": "ffaaff",
-    "sunlight": "ecc3eb"
+    "uncorrected": "#ffaaff",
+    "sunlight": "#ecc3eb"
   },
   {
-    "uncorrected": "ffff00",
-    "sunlight": "ffeeab"
+    "uncorrected": "#ffff00",
+    "sunlight": "#ffeeab"
   },
   {
-    "uncorrected": "ffff55",
-    "sunlight": "fff1b5"
+    "uncorrected": "#ffff55",
+    "sunlight": "#fff1b5"
   },
   {
-    "uncorrected": "ffffaa",
-    "sunlight": "fff6d3"
+    "uncorrected": "#ffffaa",
+    "sunlight": "#fff6d3"
   },
   {
-    "uncorrected": "555555",
-    "sunlight": "545454"
+    "uncorrected": "#555555",
+    "sunlight": "#545454"
   },
   {
-    "uncorrected": "aaaaaa",
-    "sunlight": "ababab"
+    "uncorrected": "#aaaaaa",
+    "sunlight": "#ababab"
   },
   {
-    "uncorrected": "ffaa00",
-    "sunlight": "f1aa86"
+    "uncorrected": "#ffaa00",
+    "sunlight": "#f1aa86"
   },
   {
-    "uncorrected": "ffaa55",
-    "sunlight": "f1ad93"
+    "uncorrected": "#ffaa55",
+    "sunlight": "#f1ad93"
   },
   {
-    "uncorrected": "ff0000",
-    "sunlight": "e35462"
+    "uncorrected": "#ff0000",
+    "sunlight": "#e35462"
   }
 ]
