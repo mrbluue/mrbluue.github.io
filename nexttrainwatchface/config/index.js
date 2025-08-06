@@ -976,13 +976,13 @@ submitBtn.addEventListener("click", () => {
     var dataToSend = {
         digitalClock: toggles["base-style-digital-clock-active"].toggle,
         analogClock: toggles["base-style-analog-clock-active"].toggle,
-        outerColor: colorInputs["outer-background"].entries["base-style"].value,
-        frameColor: colorInputs["frame"].entries["base-style"].value,
-        innerColor: colorInputs["inner-background"].entries["base-style"].value,
-        digitalColor: colorInputs["digital-clock"].entries["base-style"].value,
-        hourColor: colorInputs["hour-hand"].entries["base-style"].value,
-        minuteColor: colorInputs["minute-hand"].entries["base-style"].value,
-        ticksColor: colorInputs["tick-marks"].entries["base-style"].value
+        outerColor: colorInputs["outer-background"].entries["base-style"].value.slice(1),
+        frameColor: colorInputs["frame"].entries["base-style"].value.slice(1),
+        innerColor: colorInputs["inner-background"].entries["base-style"].value.slice(1),
+        digitalColor: colorInputs["digital-clock"].entries["base-style"].value.slice(1),
+        hourColor: colorInputs["hour-hand"].entries["base-style"].value.slice(1),
+        minuteColor: colorInputs["minute-hand"].entries["base-style"].value.slice(1),
+        ticksColor: colorInputs["tick-marks"].entries["base-style"].value.slice(1)
     }
 
     console.log(dataToSend);
