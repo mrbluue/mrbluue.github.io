@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Vue Config Page</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue3-sfc-loader"></script>
+  <link rel="stylesheet" href="resources/css/main.css">
+</head>
+<body>
+  <div id="app">
+    <h1>Next Train Watchface</h1>
+    <div class="lineSeparator"></div>
+    <Transition>
+      <div v-if="showErrorBox" class="error">
+        <span v-for="error in errors">{{ error }}</span>
+      </div>
+    </Transition>
+    <!-- <button @click="toggleFloatingPreview">Float</button> -->
+    <div class="section" id="section-preview">
+
+      <div class="section-header" id="preview-header">
+        <h3>Preview</h3>
+      </div>
+        <!-- <button @pointerdown="toggleFloatingPreview" @pointerup="toggleFloatingPreview">Float</button> -->
+        <component-preview 
+          v-if="previewShape" 
+          :type="previewShape" 
+          :floating="floatingPreview" 
+          :label="previewLabel"
+          :preview-colors="previewColors"
+        ></component-preview>
+    </div>
+    <div class="section" id="section-base-style">
+      <component-section-header
+        label="Base Style"
+        v-model:refresh="formData.baseStyle.refresh"
+        :checkbox="false"
+      ></component-section-header>
+      <div class="component component-heading">
+        <h6>Background</h6>
+      </div>
+      <component-color-picker
+        label="Base Outer Background"
+        v-model:value="formData.baseStyle.outerColor"
+      ></component-color-picker>
+      <component-color-picker
+        label="Frame"
+        v-model:value="formData.baseStyle.frameColor"
+      ></component-color-picker>
+      <component-color-picker
+        label="Inner Background"
+        v-model:value="formData.baseStyle.innerColor"
+      ></component-color-picker>
+      <div class="component component-heading">
+        <h6>Digital Clock</h6>
+      </div>
+      <component-checkbox
+        label="Digital Clock"
+        v-model:is-checked="formData.baseStyle.digitalClock"
+        :enabled="formData.baseStyle.analogClock"
+    ></component-checkbox>
+      <component-color-picker
+        label="Digital Clock Color"
+        v-model:value="formData.baseStyle.digitalColor"
+        :enabled="formData.baseStyle.digitalClock"
+        :conflict-value="formData.baseStyle.innerColor"
+      ></component-color-picker>
+      <div class="component component-heading">
+        <h6>Analog Clock</h6>
+      </div>
+      <component-checkbox
+        label="Analog Clock"
+        v-model:is-checked="formData.baseStyle.analogClock"
+        :enabled="formData.baseStyle.digitalClock"
+      ></component-checkbox>
+      <component-color-picker
+        label="Hour Hand Color"
+        v-model:value="formData.baseStyle.hourColor"
+        :enabled="formData.baseStyle.analogClock"
+      ></component-color-picker>
+      <component-color-picker
+        label="Minute Hand Color"
+        v-model:value="formData.baseStyle.minuteColor"
+        :enabled="formData.baseStyle.analogClock"
+      ></component-color-picker>
+      <div class="component component-heading">
+        <h6>Tick Marks</h6>
+      </div>
+      <component-checkbox
+        label="Tick Marks"
+        v-model:is-checked="formData.baseStyle.ticks"
+      ></component-checkbox>
+      <component-color-picker
+        label="Tick Marks Color"
+        v-model:value="formData.baseStyle.ticksColor"
+        :conflict-value="formData.baseStyle.outerColor"
+      ></component-color-picker>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <h3>Train Times</h3>
+      </div>
+      <div class="component">
+        <div class="disclaimer">
+          <span><b>Privacy Disclaimer:</b></span>
+          <span>By checking this box, you acknowledge that your selected stations and trains will be sent to a private server whenever the watch requests train times.</span>
+          <span>For security and debugging purposes, your IP address, selected station and trains are temporarily logged and retained by the server for up to 24 hours before being automatically deleted.</span>
+          <span>Your GPS location is <b>never</b> sent to the server.</span>
+          <span>Trains are requested as to always show the three next trains and additionnally at the frequency you select below.</span>
+        </div>
+      </div>
+      <component-checkbox
+        label="Activate Train Times"
+        v-model:is-checked="formData.acknowledgment"
+      ></component-checkbox>
+      <div class="component component-heading">
+        <h6>Request Train Data every:</h6>
+      </div>
+      <component-radio 
+        id="trains-refresh-radio"
+        section="train-times"
+        :items="[
+          { label: '3 minutes', value: 3 },
+          { label: '5 minutes', value: 5 },
+          { label: '8 minutes', value: 8 }
+        ]"
+        v-model="formData.trainRefresh"
+        :enabled="formData.acknowledgment"
+      ></component-radio>
+    </div>
+    <div class="section" id="section-station-1">
+      <component-section-header
+        label="Select Station #1"
+        v-model:is-checked="formData.station1.enable"
+        :enabled="formData.acknowledgment"
+        v-model:refresh="formData.station1.refresh"
+      ></component-section-header>
+      <div v-if="formData.acknowledgment && formData.station1.enable">
+        <component-station-picker 
+          id="station-1-picker" 
+          @selection-changed="onStationChanged"
+        ></component-station-picker>
+        <div class="component component-heading">
+          <h6>Train Display</h6>
+        </div>
+        <component-color-picker
+          label="Outer Background"
+          v-model:value="formData.station1.outerColor"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #1 Color"
+          v-model:value="formData.station1.trainColor1"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #2 Color"
+          v-model:value="formData.station1.trainColor2"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #3 Color"
+          v-model:value="formData.station1.trainColor3"
+        ></component-color-picker>
+        <component-checkbox
+          label="Tick Marks"
+          v-model:is-checked="formData.station1.ticks"
+        ></component-checkbox>
+        <component-color-picker
+          label="Tick Marks Color"
+          v-model:value="formData.station1.ticksColor"
+        ></component-color-picker>
+        <component-checkbox
+          label="Indicators"
+          v-model:is-checked="formData.station1.trainIndicators"
+        ></component-checkbox>
+        <component-color-picker
+          label="Indicator Color"
+          v-model:value="formData.station1.trainIndicatorsColor"
+        ></component-color-picker>
+        <div class="component component-heading">
+          <h6>When to show</h6>
+        </div>
+        <component-radio
+          id="station-1-mode"
+          :items="[
+            { label: 'Time', value: 'time' },
+            { label: 'Distance', value: 'distance' },
+            { label: 'Time and Distance', value: 'timedistance' }
+          ]"
+          v-model="formData.station1.mode"
+        ></component-radio>
+        <div 
+          v-if="showMode(1, 'time')" 
+          class="component component-heading">
+          <h6>Time Active</h6>
+        </div>
+        <component-time-interval
+          v-if="showMode(1, 'time')"
+          v-model:start-time="formData.station1.time.start" 
+          v-model:end-time="formData.station1.time.end" 
+        ></component-time-interval>
+        <div 
+          v-if="showMode(1, 'distance')" 
+          class="component component-heading">
+          <h6>Distance from Station</h6>
+        </div>
+        <component-radio 
+          v-if="showMode(1, 'distance')" 
+          id="station-1-distance"
+          :items="[
+            { label: '100m/320ft', value: 100 },
+            { label: '250m/820ft', value: 250 },
+            { label: '500m/1640ft', value: 500 }
+          ]"
+          v-model="formData.station1.distance"
+        ></component-radio>
+        <div class="component component-heading">
+          <h6>Top Icon</h6>
+        </div>
+        <component-checkbox
+          label="Top Icon"
+          v-model:is-checked="formData.station1.topIcon"
+        ></component-checkbox>
+        <component-color-picker
+          label="Top Icon Background"
+          v-model:value="formData.station1.topIconBGColor"
+        ></component-color-picker>
+        <component-color-picker
+          label="Top Icon Color"
+          v-model:value="formData.station1.topIconColor"
+        ></component-color-picker>
+        <component-radio 
+          v-if="formData.station1.topIcon"
+          id="station-1-icon"
+          :items="topIconsRadio"
+          v-model="formData.station1.topIconId"
+        ></component-radio>
+      </div>
+    </div>
+    <div class="section" id="section-station-2">
+      <component-section-header
+        label="Select Station #2"
+        v-model:is-checked="formData.station2.enable"
+        :enabled="formData.acknowledgment"
+        v-model:refresh="formData.station2.refresh"
+      ></component-section-header>
+      <div v-if="formData.acknowledgment && formData.station2.enable">
+        <component-station-picker
+          id="station-2-picker"
+          @selection-changed="onStationChanged"
+        ></component-station-picker>
+
+        <div class="component component-heading">
+            <h6>Train Display</h6>
+        </div>
+        <component-color-picker
+          label="Outer Background"
+          v-model:value="formData.station2.outerColor"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #1 Color"
+          v-model:value="formData.station2.trainColor1"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #2 Color"
+          v-model:value="formData.station2.trainColor2"
+        ></component-color-picker>
+        <component-color-picker
+          label="Train #3 Color"
+          v-model:value="formData.station2.trainColor3"
+        ></component-color-picker>
+        <component-checkbox
+          label="Tick Marks"
+          v-model:is-checked="formData.station2.ticks"
+        ></component-checkbox>
+        <component-color-picker
+          label="Tick Marks Color"
+          v-model:value="formData.station2.ticksColor"
+        ></component-color-picker>
+        <component-checkbox
+          label="Indicators"
+          v-model:is-checked="formData.station2.trainIndicators"
+        ></component-checkbox>
+        <component-color-picker
+          label="Indicator Color"
+          v-model:value="formData.station2.trainIndicatorsColor"
+        ></component-color-picker>
+        <div class="component component-heading">
+          <h6>When to show</h6>
+        </div>
+        <component-radio 
+          id="station-2-mode"
+          :items="[
+            { label: 'Time', value: 'time' },
+            { label: 'Distance', value: 'distance' },
+            { label: 'Time and Distance', value: 'timedistance' }
+          ]"
+          v-model="formData.station2.mode"
+        ></component-radio>
+        <div 
+          v-if="showMode(2, 'time')"
+          class="component component-heading">
+          <h6>Time Active</h6>
+        </div>
+        <component-time-interval
+          v-if="showMode(2, 'time')"
+          v-model:start-time="formData.station2.time.start" 
+          v-model:end-time="formData.station2.time.end" 
+        ></component-time-interval>
+        <div 
+          v-if="showMode(2, 'distance')"
+          class="component component-heading">
+          <h6>Distance from Station</h6>
+        </div>
+        <component-radio 
+          v-if="showMode(2, 'distance')"
+          id="station-2-distance"
+          :items="[
+            { label: '100m/320ft', value: 100 },
+            { label: '250m/820ft', value: 250 },
+            { label: '500m/1640ft', value: 500 }
+          ]"
+          v-model="formData.station2.distance"
+        ></component-radio>
+        <div class="component component-heading">
+          <h6>Top Icon</h6>
+        </div>
+        <component-checkbox
+          label="Top Icon"
+          v-model:is-checked="formData.station2.topIcon"
+        ></component-checkbox>
+        <component-color-picker
+          label="Top Icon Background"
+          v-model:value="formData.station2.topIconBGColor"
+          :enabled="formData.station2.topIcon"
+        ></component-color-picker>
+        <component-color-picker
+          label="Top Icon Color"
+          v-model:value="formData.station2.topIconColor"
+          :enabled="formData.station2.topIcon"
+        ></component-color-picker>
+        <component-radio 
+          v-if="formData.station2.topIcon"
+          id="station-2-icon"
+          :items="topIconsRadio"
+          v-model="formData.station2.topIconId"
+        ></component-radio>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <button id="submitBtn" @click="sendData">Submit</button>
+    <div id="show-preview" @click="toggleFloatingPreview" :style="previewBtnIcon"></div> 
+  </div>
+  </div>
+
+  <script>
+    const options = {
+      moduleCache: { vue: Vue },
+      getFile(url) {
+        return fetch(url).then(response => response.ok ? response.text() : Promise.reject());
+      },
+      addStyle(textContent) {
+        const style = Object.assign(document.createElement('style'), { textContent });
+        document.head.appendChild(style);
+      },
+    };
+
+    const { loadModule } = window['vue3-sfc-loader'];
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          previewShape: "",
+          previewDisplay: "",
+          floatingPreview: false,
+          topIconsRadio: [
+            { label:    'Show Time', value: 0 },
+            { labelImg: 'resources/img/topIcons/icon-home-16.png', value: 1 },
+            { labelImg: 'resources/img/topIcons/icon-briefcase-16.png', value: 2 },
+            { labelImg: 'resources/img/topIcons/icon-school-16.png', value: 3 },
+            { labelImg: 'resources/img/topIcons/icon-bank-16.png', value: 4 },
+            { labelImg: 'resources/img/topIcons/icon-heart-16.png', value: 5 },
+            { labelImg: 'resources/img/topIcons/icon-star-16.png', value: 6 },
+            { labelImg: 'resources/img/topIcons/icon-smile-16.png', value: 7 },
+          ],
+          formData: {
+            baseStyle: {
+              refresh: false,
+              digitalClock: true,
+              analogClock: true,
+              ticks: true,
+              outerColor: "555555",
+              frameColor: "aaaaaa",
+              innerColor: "555555",
+              digitalColor: "ffffff",
+              hourColor: "ff0000",
+              minuteColor: "000000",
+              ticksColor: "ffffff",
+            },
+            station1:{
+              refresh: false,
+              enable: true,
+              stationId: "",
+              trains: [],
+              geo: {
+                lat: "",
+                long: ""
+              },
+              mode: "",
+              time: {
+                start: "08:00",
+                end: "10:30"
+              },
+              distance: 0,
+              outerColor: "555555",
+              trainColor1: "ff0000",
+              trainColor2: "ff5555",
+              trainColor3: "ffaaaa",
+              ticks: true,
+              ticksColor: "ffffff",
+              trainIndicators: true,
+              trainIndicatorsColor: "000000",
+              topIcon: false,
+              topIconBGColor: "000000",
+              topIconColor: "ffffff",
+              topIconId: 0
+            },
+            station2:{
+              refresh: false,
+              enable: false,
+              stationId: "",
+              trains: [],
+              geo: {
+                lat: "",
+                long: ""
+              },
+              mode: "",
+              time: {
+                start: "16:50",
+                end: "18:30"
+              },
+              distance: 0,
+              outerColor: "555555",
+              trainColor1: "0000aa",
+              trainColor2: "0000ff",
+              trainColor3: "55aaff",
+              ticks: true,
+              ticksColor: "ffffff",
+              trainIndicators: true,
+              trainIndicatorsColor: "aaaaaa",
+              topIcon: false,
+              topIconBGColor: "000000",
+              topIconColor: "ffffff",
+              topIconId: 0
+            },
+            trainRefresh: 10,
+            acknowledgment: true
+          },
+          previewLabel: "Base Style",
+          previewColors: {
+              digitalClock: true,
+              analogClock: true,
+              ticks: true,
+              trains: false,
+              trainIndicators: true,
+              outerColor: "555555",
+              frameColor: "aaaaaa",
+              innerColor: "555555",
+              digitalColor: "ffffff",
+              hourColor: "ff0000",
+              minuteColor: "000000",
+              ticksColor: "ffffff",
+              trainColor1: "0000aa", 
+              trainColor2: "0000ff", 
+              trainColor3: "55aaff",
+              trainIndicatorsColor: "aaaaaa",
+              topIcon: false,
+              topIconBGColor: "000000",
+              topIconColor: "ffffff",
+              topIconId: 0
+          },
+          colorPalette: null,
+          errors: [],
+          showErrorBox: false
+        };
+      },
+      mounted() {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.previewShape = urlParams.get('shape');
+        this.previewDisplay = urlParams.get('display');
+        fetch('./data/pebble-palette.json') // path relative to the HTML file
+          .then(res => res.json())
+          .then(data => {
+            this.colorPalette = data;
+            console.log('Loaded JSON:', data);
+          })
+          .catch(err => console.error('Error loading JSON:', err));
+
+        this.$watch(
+          () => JSON.parse(JSON.stringify(this.formData.baseStyle)), // only way to be able to tell old value v. new value in an object
+          (newVal, oldVal) => {
+
+            const changedKey = Object.keys(newVal).find(
+              key => JSON.stringify(newVal[key]) !== JSON.stringify(oldVal[key])
+            );
+
+            const keysToChangePreview = ["outerColor", "ticksColor"];
+            const changePreview = keysToChangePreview.find(key => key === changedKey);
+
+            
+            if(changePreview === undefined) {
+              this.previewColors[changedKey] = newVal[changedKey];
+              this.defaultIfSame(this.formData.baseStyle, "innerColor", "digitalColor", "000000");
+              return;
+            }
+            
+            this.defaultIfSame(this.formData.baseStyle, "outerColor", "ticksColor", "000000");
+            console.log("changing back to base style preview")
+
+            this.changePreview(this.formData.baseStyle, false, "Base Style");
+
+            console.log("new preview colors");
+            console.log(this.previewColors);
+          }
+        );
+      },
+      watch:{
+        // 'formData.baseStyle': {
+        //   handler(newValue, oldValue) {
+        //     console.log("changed base style old: ", oldValue);
+        //     console.log("changed base style new: ", newValue);
+
+        //     // this.disableIfSame(this.formData.baseStyle, "innerColor", "digitalColor", "digitalClock");
+        //     // this.disableIfSame(this.formData.baseStyle, "outerColor", "ticksColor", "ticks");
+            
+        //     const changedKey = Object.keys(newValue).find(
+        //       key => newValue[key] !== oldValue[key]
+        //     );
+
+        //     console.log("changed key: " + changedKey);
+
+        //     const keysToChangePreview = ["outerColor", "ticksColor"];
+
+        //     const changePreview = keysToChangePreview.find(key => key === changedKey);
+
+        //     if(!changePreview) {
+        //       this.previewColors[changedKey] = newValue[changedKey];
+        //       return;
+        //     }
+
+        //     this.defaultIfSame(newValue, "innerColor", "digitalColor", "000000");
+        //     this.defaultIfSame(newValue, "outerColor", "ticksColor", "000000");
+
+        //     this.changePreview(newValue, false, "Base Style");
+
+        //     console.log("new preview colors");
+        //     console.log(this.previewColors);
+
+        //   },
+        //   deep: true
+        // },
+        'formData.station1': {
+          handler(newValue, oldValue) {
+            if (!this.formData.station1.enable){
+              this.changePreview(this.formData.baseStyle, false, "Base Style");
+              return;
+            }
+
+            this.defaultIfSame(newValue, "topIconBGColor", "topIconColor", "ffffff");
+
+            this.changePreview(newValue, true, "Station #1");
+
+            console.log(this.previewColors);
+
+          },
+          deep: true
+        },
+        'formData.station2': {
+          handler(newValue, oldValue) {
+            if (!this.formData.station2.enable){
+              this.changePreview(this.formData.baseStyle, false, "Base Style");
+              return;
+            }
+
+            this.defaultIfSame(newValue, "topIconBGColor", "topIconColor", "ffffff");
+
+            this.changePreview(newValue, true, "Station #2");
+
+            console.log("new preview colors");
+            console.log(this.previewColors);
+
+          },
+          deep: true
+        },
+      },
+      computed: {
+        previewBtnIcon(){
+          return { backgroundImage: this.floatingPreview ? 'url("resources/img/eye-icon.svg")' : 'url("resources/img/eye-icon-slash.svg")'};
+        }
+      },
+      methods: {
+        onStationChanged(station) {
+          if (station.id === 'station-1-picker') {
+            // this.selector1Data = station;
+            console.log('Selector 1 changed:', station);
+          } else if (station.id === 'station-2-picker') {
+            // this.selector2Data = station;
+            console.log('Selector 2 changed:', station);
+          }
+        },
+        showMode(station, mode){
+          if (station === 1)
+            return this.formData.station1.mode.includes(mode);
+
+          if (station === 2)
+            return this.formData.station2.mode.includes(mode);
+          return;
+        },
+        onColorChanged(color) {
+          if (color.id === 'train-2-color') {
+            console.log('color changed:', color)
+            this.train2Color = color.value;
+          }
+        },
+        changePreview(inputArray, showTrains, label){
+            this.previewColors = Object.fromEntries(
+              Object.keys(this.previewColors).map(k => [k, this.getSunlightColor(inputArray[k]) ?? this.previewColors[k]])
+            );
+            this.previewColors.trains = showTrains;
+            if(!showTrains)
+              this.previewColors.topIcon = false;
+            this.previewLabel = label;
+        },
+        isHex(str) {
+          return /^[0-9A-Fa-f]+$/.test(str);
+        },
+        getSunlightColor(color) {
+          if (!this.isHex(color)) return color;
+          var newColor = this.colorPalette?.find(colorPair => colorPair.uncorrected === color);
+          // console.log("color: " + color + " newColor: " + newColor?.uncorrected + " " + newColor?.sunlight);
+          return newColor ? newColor.sunlight : color;
+        },
+        toggleFloatingPreview() {
+          this.floatingPreview = !this.floatingPreview;
+          console.log("floating!?");
+        },
+        // time intervals
+        toMinutes(timeStr) {
+          const [h, m] = timeStr.split(':').map(Number);
+          return h * 60 + m;
+        },
+        addDayInterval(i) {
+          return { start: i.start + 1440, end: i.end + 1440 };
+        },
+        normalizeInterval(start, end) {
+            if (end <= start) {
+                // Spans midnight
+                end += 1440; // Add 24h in minutes
+            }
+            return { start, end };
+        },
+        intervalsOverlap(a, b) {
+          return a.start < b.end && b.start < a.end;
+        },
+        checkOverlap() {
+          if (!(this.formData.station1.enable && this.formData.station2.enable)) return;
+          if (!(this.formData.station1.mode.includes("time") && this.formData.station2.mode.includes("time"))) 
+            return false;
+
+          const t1 = this.formData.station1.time.start;
+          const t2 = this.formData.station1.time.end;
+          const t3 = this.formData.station2.time.start;
+          const t4 = this.formData.station2.time.end;
+
+          if (!t1 || !t2 || !t3 || !t4) {
+              // alert("Please fill all times.");
+              return;
+          }
+
+          let i1 = this.normalizeInterval(this.toMinutes(t1), this.toMinutes(t2));
+          let i2 = this.normalizeInterval(this.toMinutes(t3), this.toMinutes(t4));
+
+          // Handle both intervals possibly spanning midnight by duplicating and comparing in extended space
+          const overlap =
+              this.intervalsOverlap(i1, i2) ||
+              this.intervalsOverlap(i1, this.addDayInterval(i2)) ||
+              this.intervalsOverlap(this.addDayInterval(i1), i2);
+
+          return overlap;
+
+        },
+        // submit button
+        showError(){
+          this.showErrorBox = true;
+          setTimeout(()=>{
+              this.showErrorBox = false;
+          }, 4000);
+        },
+        disableIfSame(obj, colorKey1, colorKey2, boolKey) {
+          if (obj[colorKey1] === obj[colorKey2]) {
+            obj[boolKey] = false;
+          }
+        },
+        defaultIfSame(obj, colorKey1, colorKey2, def){
+          if (obj[colorKey1] === obj[colorKey2]) {
+            if (obj[colorKey2] != def)
+              obj[colorKey2] = def;
+            else {
+              var newDefault = def === "000000" ? "ffffff" : "000000";
+              obj[colorKey2] = newDefault;
+            }
+
+          }
+        },
+        getQueryParam(variable, defaultValue) {
+          var query = location.search.substring(1);
+          var vars = query.split('&');
+          for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (pair[0] === variable) {
+              return decodeURIComponent(pair[1]);
+            }
+          }
+          return defaultValue || false;
+        },
+        sendData(){
+          if(this.showErrorBox) return;
+
+          console.log(this.formData);
+
+          this.errors = [];
+
+          if(!this.formData.baseStyle.digitalClock)
+            if(this.formData.baseStyle.minuteColor === this.formData.baseStyle.innerColor || this.formData.baseStyle.hourColor === this.formData.baseStyle.innerColor){
+              this.errors.push("Sir, this is a watch: you need to be able to see the time.");
+              this.errors.push("Please make both clock hands visible.");
+            }
+
+
+          this.disableIfSame(this.formData.baseStyle, "outerColor", "ticksColor", "ticks");
+          // disableTicksIfSame(this.formData.station1, "outerColor", "ticksColor", "ticks");
+          // disableTicksIfSame(this.formData.station2, "outerColor", "ticksColor", "ticks");  
+
+          if(this.checkOverlap()) 
+              this.errors.push("Time intervals overlap");
+          
+          if(this.errors.length != 0)
+            this.showError();
+
+          delete this.formData.baseStyle.refresh;
+          delete this.formData.station1.refresh;
+          delete this.formData.station2.refresh;
+
+          var return_to = this.getQueryParam('return_to', 'pebblejs://close#');
+
+          console.log(JSON.stringify(this.formData));
+
+          document.location = return_to + encodeURIComponent(JSON.stringify(this.formData));
+
+        }
+      },
+
+    });
+    app.component('component-station-picker', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentStationPicker.vue', options)
+    ));
+    app.component('component-color-picker', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentColorPicker.vue', options)
+    ));
+    app.component('component-checkbox', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentCheckbox.vue', options)
+    ));
+    app.component('component-section-header', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentSectionHeader.vue', options)
+    ));
+    app.component('component-radio', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentRadioInput.vue', options)
+    ));
+    app.component('component-time-interval', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentTimeIntervalInput.vue', options)
+    ));
+    app.component('component-preview', Vue.defineAsyncComponent(() =>
+      loadModule('./components/ComponentPreview.vue', options)
+    ));
+    app.mount('#app');
+  </script>
+</body>
+</html>
