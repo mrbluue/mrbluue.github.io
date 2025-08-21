@@ -1,0 +1,27 @@
+agency_id,route_id,route_short_name,route_long_name,route_type,route_direction_N,route_direction_S,route_color
+MTA NYCT,1,1,Broadway - 7 Avenue Local,1,242 St - Van Cortlandt Park,South Ferry,EE352E
+MTA NYCT,2,2,7 Avenue Express,1,Wakefield-241 St,Flatbush Av-Brooklyn College,EE352E
+MTA NYCT,3,3,7 Avenue Express,1,Harlem-148 St,New Lots Av ,EE352E
+MTA NYCT,4,4,Lexington Avenue Express,1,Woodlawn,Crown Hts-Utica,00933C
+MTA NYCT,5,5,Lexington Avenue Express,1,Eastchester-Dyre / Nereid Av,Flatbush Av-Brooklyn College,00933C
+MTA NYCT,6,6,Lexington Avenue Local,1,Pelham Bay Park,Brooklyn Bridge-City Hall,00933C
+MTA NYCT,7,7,Flushing Local,1,Flushing-Main St,34 St-Hudson Yards,B933AD
+MTA NYCT,L,L,14 St-Canarsie Local,1,14 St - 8 Av,Canarsie-Rockaway Pkwy,A7A9AC
+MTA NYCT,GS,S,42 St Shuttle,1,Times Sq-42 St,Grand Central-42 St,6D6E71
+MTA NYCT,A,A,8 Avenue Express,1,Inwood-207,Howard Beach-JFK Airport / Ozone Park-Lefferts Blvd,2850AD
+MTA NYCT,C,C,8 Avenue Local,1,168 St,Euclid Av,2850AD
+MTA NYCT,E,E,8 Avenue Local,1,Jamaica Center-Parsons/Archer,World Trade Center,2850AD
+MTA NYCT,H,S,Rockaway Park Shuttle,1,Far Rockaway-Mott,Rockaway Park-Beach 116 St,
+MTA NYCT,B,B,6 Avenue Express,1,Bedford Park Blvd / 145 St,Brighton Beach,FF6319
+MTA NYCT,D,D,6 Avenue Express,1,Norwood-205 St,Coney Island-Stillwell Av,FF6319
+MTA NYCT,F,F,Queens Blvd Express/ 6 Av Local,1,Jamaica-179 St,Coney Island-Stillwell Av,FF6319
+MTA NYCT,M,M,Queens Blvd Local/6 Av Local,1,Forest Hills-71 Av ,Middle Village-Metropolitan Av,FF6319
+MTA NYCT,FS,S,Franklin Avenue Shuttle,1,Franklin Avenue,Prospect Park,
+MTA NYCT,G,G,Brooklyn-Queens Crosstown,1,Court Sq,Church Av,6CBE45
+MTA NYCT,N,N,Broadway Local,1,Astoria-Ditmars Blvd,Coney Island-Stillwell Av,FCCC0A
+MTA NYCT,Q,Q,Broadway Express,1,96 St,Coney Island-Stillwell Av,FCCC0A
+MTA NYCT,R,R,Broadway Local,1,Forest Hills-71 Av,Bay Ridge-95 St,FCCC0A
+MTA NYCT,W,W,Broadway Local,1,Astoria-Ditmars Blvd,Whitehall St-South Ferry,FCCC0A
+MTA NYCT,J,J,Nassau St Local,1,Jamaica Center-Parsons/Archer,Broad St,996633
+MTA NYCT,Z,Z,Nassau St Express,1,Jamaica Center-Parsons/Archer,Broad St,996633
+MTA NYCT,SI,SIR,Staten Island Railway,2,St George,Tottenville,
