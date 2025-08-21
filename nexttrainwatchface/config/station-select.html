@@ -241,8 +241,10 @@
         <div class="placeholder" id="placeholder-stations">Select a line to search stations</div>
         <input type="search" id="stationSearch" placeholder="Search stations..." class="hidden" autocorrect="off" />
         <div class="customSelectList hidden" id="stationSelectList" tabindex="0"></div>
-        <input type="hidden" name="stationValue" id="stationValue">
-        <input type="hidden" name="stationName" id="stationName">
+        <input type="hidden" name="stationValue" id="stationValue" />
+        <input type="hidden" name="stationName" id="stationName" />
+        <input type="hidden" name="stationGeoLat" id="stationGeoLat" />
+        <input type="hidden" name="stationGeoLong" id="stationGeoLong" />
       </div>
     </div>
     <div class="component">
@@ -290,12 +292,14 @@ function sendHeight() {
     }, '*'); // You can replace '*' with the parent's origin for security
 }
 
-function sendUpdate(stationResult, trainsResult, directionResult) {
+function sendUpdate(stationResult, trainsResult, directionResult, geoLatResult, geoLongResult) {
     window.parent.postMessage({
       type: "result",
       station: stationResult,
       trains: trainsResult,
-      direction: directionResult
+      direction: directionResult,
+      geo_lat: geoLatResult,
+      geo_long: geoLongResult
     }, '*'); // You can replace '*' with the parent's origin for security
 }
 
@@ -326,7 +330,9 @@ async function loadData() {
     name: row[5], // stop_name
     lines: row[8] ? row[8].split(" ").map(line => ({ id: line })) : [], // Safety check
     direction_N: row[12],
-    direction_S: row[13]
+    direction_S: row[13],
+    geo_lat: row[10],
+    geo_long: row[11],
   }));
 
 
@@ -341,6 +347,8 @@ function initializeDropdown(lines, stops) {
   const stationSelectCustom = document.getElementById("stationSelectList");
   const stationValue = document.getElementById("stationValue");
   const stationName = document.getElementById("stationName");
+  const geoLatValue = document.getElementById("stationGeoLat");
+  const geoLongValue = document.getElementById("stationGeoLong");
   const lineSelectContainer = document.getElementById("lineSelectContainer");
   const directionContainer = document.getElementById("directionContainer");
   const directionContainer2 = document.getElementById("direction-container");
@@ -492,6 +500,11 @@ function initializeDropdown(lines, stops) {
         setDirection(directionValue.value);
       }
 
+      if(selectedStop.geo_lat && selectedStop.geo_long){
+        geoLatValue.value = selectedStop.geo_lat;
+        geoLongValue.value = selectedStop.geo_long;
+      }
+
       setStationResult();
     } else {
       directionContainer2.classList.remove("hidden");
@@ -577,7 +590,7 @@ function initializeDropdown(lines, stops) {
     });
 
     sendHeight();
-    sendUpdate(stationValue.value, checkedTrains, directionValue.value);
+    sendUpdate(stationValue.value, checkedTrains, directionValue.value, geoLatValue.value, geoLongValue.value);
   }
 
   function renderStationOptions(filter = "") {

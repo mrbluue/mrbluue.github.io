@@ -1,190 +1,6 @@
 // To whomever is adventuring here:
 // for my defense, at least it all works (probably)
 
-var data = {
-    colors: {
-        "outer-background": {
-            "base-style": {
-                default: "555555",
-                value: null,
-            },
-            "station-1": {
-                default: "555555",
-                value: null,
-            },
-            "station-2": {
-                default: "555555",
-                value: null,
-            },
-        },
-        "frame": {
-            "base-style": {
-                default: "AAAAAA",
-                value: null,
-            }
-        },
-        "inner-background": {
-            "base-style": {
-                default: "555555",
-                value: null,
-            }
-        },
-        "digital-clock": {
-            "base-style": {
-                type: "color",
-                default: "ffffff",
-                value: null,
-            }
-        },
-        "hour-hand": {
-            "base-style": {
-                type: "color",
-                default: "ff0000",
-                value: null,
-            }
-        },
-        "minute-hand": {
-            "base-style": {
-                type: "color",
-                default: "000000",
-                value: null,
-            }
-        },
-        "train-1": {
-            "base-style": {
-                type: "color",
-                default: "ff0000",
-                value: null,
-            },
-            "station-1": {
-                type: "color",
-                default: "ff0000",
-                value: null,
-            },
-            "station-2": {
-                type: "color",
-                default: "ff0000",
-                value: null,
-            },
-        },
-        "train-2": {
-            "base-style": {
-                type: "color",
-                default: "ff5555",
-                value: null,
-            },
-            "station-1": {
-                type: "color",
-                default: "ff5555",
-                value: null,
-            },
-            "station-2": {
-                type: "color",
-                default: "ff5555",
-                value: null,
-            },
-        },
-        "train-3": {
-            "base-style": {
-                type: "color",
-                default: "ffaaaa",
-                value: null,
-            },
-            "station-1": {
-                type: "color",
-                default: "ffaaaa",
-                value: null,
-            },
-            "station-2": {
-                type: "color",
-                default: "ffaaaa",
-                value: null,
-            },
-        },
-        "tick-marks": {
-            "base-style": {
-                type: "color",
-                default: "ffffff",
-                value: null,
-            },
-            "station-1": {
-                type: "color",
-                default: "ffffff",
-                value: null,
-            },
-            "station-2": {
-                type: "color",
-                default: "ffffff",
-                value: null,
-            },
-        },
-        "train-indicator": {
-            "base-style": {
-                type: "color",
-                default: "000000",
-                value: null,
-            },
-            "station-1": {
-                type: "color",
-                default: "000000",
-                value: null,
-            },
-            "station-2": {
-                type: "color",
-                default: "000000",
-                value: null,
-            },
-        },
-    },
-    toggles: {
-        "base-style-digital-clock-active": {
-            default: true,
-            value: null,
-        },
-        "base-style-analog-clock-active": {
-            default: true,
-            value: null,
-        },
-        "base-style-tick-marks-active": {
-            default: "true",
-            value: null,
-        },
-        "station-1-tick-marks-active": {
-            default: "true",
-            value: null,
-        },
-        "station-2-tick-marks-active": {
-            default: "true",
-            value: null,
-        },
-        "trains-times-privacy-active": {
-            default: false,
-            value: null,
-        },
-    },
-    stations: {
-        "station-1": {
-            enabled: true,
-            stationId: null,
-            trains: null,
-            mode: "",
-            time: null,
-            distance: null,
-            topIcon: null
-        },
-        "station-2": {
-            enabled: true,
-            stationId: null,
-            trains: null,
-            mode: "",
-            time: null,
-            distance: null,
-            topIcon: null
-        },    
-    },
-    requestFrequency: 10
-};
-
 const toggles = {
     "base-style-digital-clock-active" : {
         formDependents: ["base-style-digital-clock-label"],
@@ -706,7 +522,6 @@ function setDisabledState(element, disabled, label = false) {
     }
 }
 
-// TODO: UNIFY SET COLOR FUNCTIONS
 function updateColorInput(dependent, enabled) {
     const entry = colorInputs[dependent.id].entries[dependent.entry];
     entry.enabled = enabled;
@@ -747,11 +562,11 @@ window.addEventListener('load', function() {
         section.addEventListener('change', (event) => {
             // console.log(event);
 
-            if (event.target.name === 'icons-1') {
+            if (event.target.name === 'station-1-icon') {
                 colorInputs["train-indicator"].topIcon["station-1"].value = event.target.value;
             }
 
-            if (event.target.name === 'icons-2') {
+            if (event.target.name === 'station-2-icon') {
                 colorInputs["train-indicator"].topIcon["station-2"].value = event.target.value;
             }
 
@@ -790,8 +605,8 @@ window.addEventListener('load', function() {
 // TRAIN SELECTION IFRAMES
 
 const iframes = [
-    document.getElementById('station1-iframe'),
-    document.getElementById('station2-iframe')
+    document.getElementById('station-1-iframe'),
+    document.getElementById('station-2-iframe')
 ];
 
 iframes.forEach(iframe => {
@@ -822,7 +637,19 @@ window.addEventListener('message', (event) => {
     if(event.data.type === 'result') {
         for (const iframe of iframes) {
             if (iframe.contentWindow === event.source) {
-                console.log(`Result from station #${iframe.id}: station ${event.data.station} / trains ${JSON.stringify(event.data.trains)} / direction ${event.data.direction}`);
+                let currentStation;
+                if (iframe.id.includes("station-1")) currentStation = "station-1";
+                else if (iframe.id.includes("station-2")) currentStation = "station-2";
+                else break;
+                
+                console.log(`Result from station #${iframe.id}: station ${event.data.station} / trains ${JSON.stringify(event.data.trains)} / direction ${event.data.direction} / geo lat ${event.data.geo_lat} long ${event.data.geo_long}`);
+                const stationInput = document.getElementById(currentStation + "-station");
+                const trainsInput = document.getElementById(currentStation + "-trains");
+                const geoInput = document.getElementById(currentStation + "-geo");
+
+                stationInput.value = event.data.station + event.data.direction;
+                trainsInput.value = event.data.trains;
+                geoInput.value = event.data.geo_lat + "|" + event.data.geo_long;
                 break;
             }
         }
@@ -953,36 +780,108 @@ function getDataFromStations() {
     return result;
 }
 
+function getColorValue(input, style) {
+    let result = colorInputs[input].entries[style].value.slice(1);
+
+    if(!result) return "ffffff";
+
+    return result;
+}
+
+function getSelectedRadio(station, item, getData = false) {
+    let result = null;
+
+    const checkedRadio = document.querySelector('input[name="' + station + '-' + item + '"]:checked');
+    if (checkedRadio && !getData) result = checkedRadio.value;
+    if (checkedRadio &&  getData) result = checkedRadio.dataset.value;
+
+    return result;
+}
+
 const submitBtn = document.getElementById("submitBtn");
 
 submitBtn.addEventListener("click", () => {
-    // const stationId = stationValue.value;
-    // const stationName = filteredStops.find(s => s.id === stationId).name;
-    // const direction = directionSelect.value;
-    // const errors = [];
-    // if(checkOverlap) {
-    //     errors.push("Time intervals overlap")
-    // }
+
+    const acknowledgement = document.getElementById("trains-function-active");
+    if (!acknowledgement.checked){
+            showError("Please acknowledge the privacy disclaimer.");
+        return;
+    }
+
+    const errors = [];
+
+    if(checkOverlap) {
+        errors.push("Time intervals overlap")
+    }
+
     // console.log(errors);
-    // getDataFromColorInputs();
-
-    // var dataToSend = {
-    //     colors: getDataFromColorInputs(),
-    //     toggles: getDataFromToggleInputs(),
-    //     stations: {},
-    //     requestFrequency: {}
-    // }
-
+    
     var dataToSend = {
-        digitalClock: toggles["base-style-digital-clock-active"].toggle,
-        analogClock: toggles["base-style-analog-clock-active"].toggle,
-        outerColor: colorInputs["outer-background"].entries["base-style"].value.slice(1),
-        frameColor: colorInputs["frame"].entries["base-style"].value.slice(1),
-        innerColor: colorInputs["inner-background"].entries["base-style"].value.slice(1),
-        digitalColor: colorInputs["digital-clock"].entries["base-style"].value.slice(1),
-        hourColor: colorInputs["hour-hand"].entries["base-style"].value.slice(1),
-        minuteColor: colorInputs["minute-hand"].entries["base-style"].value.slice(1),
-        ticksColor: colorInputs["tick-marks"].entries["base-style"].value.slice(1)
+        baseStyle: {
+            digitalClock: toggles["base-style-digital-clock-active"].toggle,
+            analogClock: toggles["base-style-analog-clock-active"].toggle,
+            ticks: toggles["base-style-tick-marks-active"].toggle,
+            outerColor: getColorValue("outer-background", "base-style"),
+            frameColor: getColorValue("frame", "base-style"),
+            innerColor: getColorValue("inner-background", "base-style"),
+            digitalColor: getColorValue("digital-clock", "base-style"),
+            hourColor: getColorValue("hour-hand", "base-style"),
+            minuteColor: getColorValue("minute-hand", "base-style"),
+            ticksColor: getColorValue("tick-marks", "base-style"),
+        },
+        station1: {
+            enable: toggles["station-1-active"].toggle,
+            stationId: document.getElementById("station-1-station").value,
+            trains: document.getElementById("station-1-trains").value,
+            mode: getSelectedRadio("station-1", "mode"),
+            time: {
+                start: document.getElementById("s1-t1").value,
+                end:  document.getElementById("s1-t2").value
+            },
+            geo: {
+                lat: document.getElementById("station-1-geo").value.split("|")[0],
+                long: document.getElementById("station-1-geo").value.split("|")[1],
+            },
+            distance: getSelectedRadio("station-1", "distance"),
+            outerColor: getColorValue("outer-background", "station-1"),
+            trainColors: [
+                getColorValue("train-1", "station-1"),
+                getColorValue("train-2", "station-1"),
+                getColorValue("train-3", "station-1"),
+            ],
+            ticks: toggles["station-1-tick-marks-active"].toggle,
+            ticksColor: getColorValue("tick-marks", "station-1"),
+            trainIndicators: toggles["station-1-train-indicator-active"].toggle,
+            trainIndicatorsColor: getColorValue("train-indicator", "station-1"),
+            topIconID: getSelectedRadio("station-1", "icon", true)
+        },
+        station2: {
+            enable: toggles["station-2-active"].toggle,
+            stationId: document.getElementById("station-2-station").value,
+            trains: document.getElementById("station-2-trains").value,
+            mode: getSelectedRadio("station-2", "mode"),
+            time: {
+                start: document.getElementById("s2-t1").value,
+                end:  document.getElementById("s2-t2").value
+            },
+            geo: {
+                lat: document.getElementById("station-2-geo").value.split("|")[0],
+                long: document.getElementById("station-2-geo").value.split("|")[1],
+            },
+            distance: getSelectedRadio("station-2", "distance"),
+            outerColor: getColorValue("outer-background", "station-2"),
+            trainColors: [
+                getColorValue("train-1", "station-2"),
+                getColorValue("train-2", "station-2"),
+                getColorValue("train-3", "station-2"),
+            ],
+            ticks: toggles["station-2-tick-marks-active"].toggle,
+            ticksColor: getColorValue("tick-marks", "station-2"),
+            trainIndicators: toggles["station-2-train-indicator-active"].toggle,
+            trainIndicatorsColor: getColorValue("train-indicator", "station-2"),
+            topIconID: getSelectedRadio("station-2", "icon", true)
+        },
+        requestFrequency: getSelectedRadio("trains-refresh", "radio")
     }
 
     console.log(dataToSend);

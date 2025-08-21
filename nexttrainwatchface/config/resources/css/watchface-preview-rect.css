@@ -89,18 +89,6 @@
     display: none;
 }
 
-#watchface-radial-1{
-  z-index: 10;
-}
-
-#watchface-radial-2{
-  z-index: 20;
-}
-
-#watchface-radial-3{
-  z-index: 30;
-}
-
 .watchface-radial-line {
   stroke-width: 32px;
   fill: transparent;

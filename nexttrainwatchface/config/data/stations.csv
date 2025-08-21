@@ -60,7 +60,7 @@ GTFS Stop ID,Station ID,Complex ID,Division,Line,Stop Name,Borough,CBD,Daytime R
 224,438,438,IRT,Lenox - White Plains Rd,135 St,M,False,2 3,Subway,40.814229,-73.94077,Uptown,Downtown,1,1,1,,POINT (-73.94077 40.814229)
 225,439,439,IRT,Lenox - White Plains Rd,125 St,M,False,2 3,Subway,40.807754,-73.945495,Uptown,Downtown,0,0,0,,POINT (-73.945495 40.807754)
 226,440,440,IRT,Lenox - White Plains Rd,116 St,M,False,2 3,Subway,40.802098,-73.949625,Uptown,Downtown,0,0,0,,POINT (-73.949625 40.802098)
-227,441,441,IRT,Lenox - White Plains Rd,Central Park North (110 St),M,False,2 3,Subway,40.799075,-73.951822,Uptown,Downtown,0,0,0,,POINT (-73.951822 40.799075)
+227,441,441,IRT,Lenox - White Plains Rd,110 St-Malcolm X Plaza,M,False,2 3,Subway,40.799075,-73.951822,Uptown,Downtown,0,0,0,,POINT (-73.951822 40.799075)
 228,331,624,IRT,Clark St,Park Place,M,True,2 3,Subway,40.713051,-74.008811,Uptown,Brooklyn,0,0,0,,POINT (-74.008811 40.713051)
 229,332,628,IRT,Clark St,Fulton St,M,True,2 3,Subway,40.709416,-74.006571,Uptown,Brooklyn,1,1,1,,POINT (-74.006571 40.709416)
 230,333,333,IRT,Clark St,Wall St,M,True,2 3,Subway,40.706821,-74.0091,Uptown,Brooklyn,0,0,0,,POINT (-74.0091 40.706821)
